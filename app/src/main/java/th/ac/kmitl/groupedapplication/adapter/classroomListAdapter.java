@@ -45,8 +45,7 @@ public class classroomListAdapter extends RecyclerView.Adapter<ClassroomViewHold
         return classroomsList.size();
     }
 }
-
-class ClassroomViewHolder extends RecyclerView.ViewHolder{
+ class ClassroomViewHolder extends RecyclerView.ViewHolder{
 
     private ClassroomItemClickListener classroomItemClickListener;
     private Classroom classroom;

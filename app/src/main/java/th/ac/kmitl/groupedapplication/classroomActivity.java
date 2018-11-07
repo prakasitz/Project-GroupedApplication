@@ -1,6 +1,7 @@
 package th.ac.kmitl.groupedapplication;
 
 import android.content.Intent;
+import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,8 +37,7 @@ import th.ac.kmitl.groupedapplication.model.Classroom;
 public class classroomActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener, ClassroomItemClickListener {
 
-
-    private String uid = null;
+    protected static String uid = null;
     private TextView textEmail;
     private TextView textFullName;
     private FirebaseAuth mAuth;
@@ -59,7 +60,6 @@ public class classroomActivity extends AppCompatActivity
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,61 +69,106 @@ public class classroomActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
+
+
+
+        getAllContacts();
     }
 
-
-
-    public ArrayList<Classroom> getAllContacts(){
+    public  void getAllContacts(){
+        final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
-
         database = FirebaseDatabase.getInstance();
-        ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
         myRef = database.getReference("classroom/"+uid);
-
         myRef.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String classID = dataSnapshot.getKey();
-
                 Log.d("getkey",classID);
                 String classSubject = dataSnapshot.child("class_subject").getValue().toString();
                 Classroom  c  = new Classroom(classID,classSubject);
                 classroomArrayList.add(c);
+                getA(classroomArrayList);
                 Log.d("get",c.getClass_subject());
                 Log.d("size",String.valueOf(classroomArrayList.size()));
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        Log.d("NEW",String.valueOf(classroomArrayList.size()));
-        return classroomArrayList;
+    }
+
+
+
+    public void getA(ArrayList<Classroom> a) {
+        ArrayList<Classroom> c = a;
+        classroomListAdapter classroomAdapter = new classroomListAdapter(c, classroomActivity.this);
+        Log.d("cList",String.valueOf(c.toArray()));
+        recyclerView.setAdapter(classroomAdapter);
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        classroomListAdapter classroomAdapter = new classroomListAdapter(getAllContacts(), classroomActivity.this);
-        recyclerView.setAdapter(classroomAdapter);
+        //Log.d("sizeList",String.valueOf(classroomArrayList.size()));
+        //classroomListAdapter classroomAdapter = new classroomListAdapter(getAllContacts(), classroomActivity.this);
+        //recyclerView.setAdapter(classroomAdapter);
+//        final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
+//        database = FirebaseDatabase.getInstance();
+//        Intent getI = getIntent();
+//        uid = getI.getStringExtra("uid");
+//        myRef = database.getReference("classroom/"+uid);
+//        myRef.orderByKey().addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    String classID = snapshot.getKey();
+//                    String classSubject = snapshot.child("class_subject").getValue().toString();
+//                    Log.d("classID",classSubject);
+//                    Classroom  c  = new Classroom(classID,classSubject);
+//                    classroomArrayList.add(c);
+//                }
+//                /*Log.d("getKey",);
+//                Log.d("getSubject",);*/
+//                Log.d("classroomArrayList",String.valueOf(classroomArrayList.size()));
+//                getA(classroomArrayList);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+        /*FirebaseRecyclerAdapter<Classroom, ClassroomViewHolder> Adapter = new FirebaseRecyclerAdapter<Classroom, ClassroomViewHolder>(
+                Classroom.class,  //Name of model class
+                R.layout.classroom_item, //Row layout to show data
+                ClassroomViewHolder.class, //Name of viewholder class
+                myRef // Database Refernce
+        ) {
+            @Override
+            protected void populateViewHolder(classroomListAdapter viewHolder, Classroom model, int position) {
+
+            }
+
+            @Override
+            protected void populateViewHolder(ClassroomViewHolder viewHolder, Classroom model, int position) {
+
+                //Your Method to load Data
+
+            }
+        };
+        RecyclerView.setAdapter(Adapter); */
     }
 
     @Override
@@ -149,12 +194,11 @@ public class classroomActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        myRef = database.getReference();
         mAuth = FirebaseAuth.getInstance();
         textEmail = findViewById(R.id.textEmail);
         textFullName = findViewById(R.id.textFullName);
-
         database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
