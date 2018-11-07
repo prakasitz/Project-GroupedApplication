@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "728372962756",
+    "firebase_url": "https://projectmoblice-classroom.firebaseio.com",
+    "project_id": "projectmoblice-classroom",
+    "storage_bucket": "projectmoblice-classroom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728372962756:android:6dfbb674b04231b2",
+        "android_client_info": {
+          "package_name": "com.projectmobile.a59050083.randomgroup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728372962756-s0ul66jdb55ejp2c7kff0ihij92u1h4u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.projectmobile.a59050083.randomgroup",
+            "certificate_hash": "a9549ff8989a925e1f2d36d5bff9e123a5958c97"
+          }
+        },
+        {
+          "client_id": "728372962756-6gbt7tg48astc8tus7uuhkg6jceui0lt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxujb9anRTwkWgBriLyUqd6RD9pMUMEWE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728372962756-6gbt7tg48astc8tus7uuhkg6jceui0lt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728372962756:android:12c7cca2c77c454f",
+        "android_client_info": {
+          "package_name": "th.ac.kmitl.groupedapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728372962756-bfm854bskc6tr8uis114pd393gieag69.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "th.ac.kmitl.groupedapplication",
+            "certificate_hash": "a9549ff8989a925e1f2d36d5bff9e123a5958c97"
+          }
+        },
+        {
+          "client_id": "728372962756-6gbt7tg48astc8tus7uuhkg6jceui0lt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxujb9anRTwkWgBriLyUqd6RD9pMUMEWE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728372962756-6gbt7tg48astc8tus7uuhkg6jceui0lt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,40 @@
+<resources>
+    <string name="submit_btn">ตกลง</string>
+    <string name="cancel_btn">ย้อนกลับ</string>
+    <string name="title_activity_login">เข้าสู่ระบบ</string>
+    <string name="title_activity_signup">สมัครสมาชิก</string>
+    <string name="title_activity_classroom">ห้องเรียน</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">ชื่อ-นามสกุล</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">ไอดีผู้ใช้</string>
+    <string name="prompt_password">รหัสผ่าน</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">เข้าสู่ระบบ</string>
+    <string name="error_invalid_email">ไอดีผู้ใช้ไม่ถูกต้อง</string>
+    <string name="error_invalid_password">รหัสผ่านไม่สั้นเกินไป</string>
+    <string name="error_incorrect_password">รหัสผ่านไม่ถูกต้อง</string>
+    <string name="error_field_required">กรุณากรอกช่องนี้</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="signup">สมัครสมาชิกและเข้าสู่ระบบ</string>
+    <string name="login">เข้าสู่ระบบ</string>
+
+    <!-- Strings related to SignUp -->
+    <string name="signup_name">ชื่อ</string>
+    <string name="signup_lname">นามสกุล</string>
+    <string name="signup_status">สถานะ</string>
+    <string name="signup_value_teacher">อาจารย์</string>
+    <string name="signup_value_student">นักเรียน</string>
+    <string name="signup_id">รหัสประจำตัว นักศึกษา หรือ อาจารย์</string>
+    <string name="signup_email">อีเมล</string>
+    <string name="signup_password">รหัสผ่าน มากกว่า 6 ตัวอักษร</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_class_menu">เมนูห้องเรียน</string>
+</resources>

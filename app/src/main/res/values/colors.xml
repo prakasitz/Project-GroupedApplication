@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorTabmenu">#592918</color>
+    <color name="colorPrimary">#EA472E</color>
+    <color name="colorSecondnary">#C3632B</color>
+    <color name="colorThird">#F5953E</color>
+    <color name="colorFourd">#FFD75F</color>
+    <color name="colorTextPrimary">#1e1403</color>
+    <color name="colorTextWarring">#ffa100</color>
+    <color name="colorTextDanger">#d00700</color>
+</resources>
