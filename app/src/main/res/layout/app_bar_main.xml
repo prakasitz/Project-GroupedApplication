@@ -33,7 +33,13 @@
         <include
             android:id="@+id/inc_classroom_menu"
             layout="@layout/content_classroom_menu"
-            android:visibility="visible"
+            android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/inc_random_group"
+        layout="@layout/content_random_group"
+        android:visibility="visible"
         />
 
 

@@ -15,9 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
-
-        </activity>
+            android:label="@string/title_activity_login"></activity>
         <activity
             android:name=".ClassroomActivity"
             android:label="@string/title_activity_classroom"
@@ -39,6 +37,11 @@
         <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
+            <activity
+                android:name=".RandomGroupActivity"
+                android:label="จับกลุ่ม"
+                android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
