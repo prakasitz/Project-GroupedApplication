@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Signup_activity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
     private EditText edID;
     private EditText edName;
     private EditText edLastName;
@@ -57,16 +57,15 @@ public class Signup_activity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_activity);
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         edID = findViewById(R.id.ids);
         edName = findViewById(R.id.name);
         edLastName = findViewById(R.id.lname);
         edEmail = findViewById(R.id.email);
         edPass = findViewById(R.id.password);
         btnSignUp = findViewById(R.id.SignupButton);
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
-
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +77,10 @@ public class Signup_activity extends AppCompatActivity {
                 mPass = edPass.getText().toString();
 
                 if(mID == null || mName == null || mLName == null || mEmail == null || mPass == null) {
-                    Toast.makeText(Signup_activity.this, "มีบางอย่างที่ไม่ได้กรอก!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "มีบางอย่างที่ไม่ได้กรอก!", Toast.LENGTH_SHORT).show();
                 } else {
                     showProgress(true);
-                    mAuthTask = new Signup_activity.UserSignUpTask(mID, mName, mLName,mEmail,mPass,radioValue);
+                    mAuthTask = new SignupActivity.UserSignUpTask(mID, mName, mLName,mEmail,mPass,radioValue);
                     mAuthTask.execute((Void) null);
                 }
 
@@ -111,8 +110,9 @@ public class Signup_activity extends AppCompatActivity {
                     StudentTable.put("uid", uid);
 
                     myRef.child("student/"+uid).updateChildren(StudentTable);
-                    Toast.makeText(Signup_activity.this, "ลงทะเบียนสำเร็จ!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Signup_activity.this, classroomActivity.class);
+                    Toast.makeText(SignupActivity.this, "ลงทะเบียนสำเร็จ!", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(SignupActivity.this, ClassroomActivity  .class);
                     intent.putExtra("uid",user.getUid());
                     startActivity(intent);
                     finish();
@@ -235,11 +235,10 @@ public class Signup_activity extends AppCompatActivity {
                         @Override
                         public void onComplete(Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(Signup_activity.this, "มีผู้ใช้ email นี้แล้วหรือรหัสผ่านน้อยกว่า 6 ตัว.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignupActivity.this, "มีผู้ใช้ email นี้แล้วหรือรหัสผ่านน้อยกว่า 6 ตัว.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.d("SignUp-Success","successed!!");
                             }
-                            // ...
                         }
                     });
 

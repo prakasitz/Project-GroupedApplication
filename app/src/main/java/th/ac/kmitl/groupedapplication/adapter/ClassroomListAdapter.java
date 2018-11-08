@@ -13,11 +13,11 @@ import java.util.List;
 import th.ac.kmitl.groupedapplication.R;
 import th.ac.kmitl.groupedapplication.model.Classroom;
 
-public class classroomListAdapter extends RecyclerView.Adapter<ClassroomViewHolder>{
+public class ClassroomListAdapter extends RecyclerView.Adapter<ClassroomViewHolder>{
     private List<Classroom> classroomsList;
     private ClassroomItemClickListener classroomItemClickListener;
 
-    public classroomListAdapter(List<Classroom> classroomsList, ClassroomItemClickListener classroomItemClickListener){
+    public ClassroomListAdapter(List<Classroom> classroomsList, ClassroomItemClickListener classroomItemClickListener){
         Log.d("crListAdapter",String.valueOf(classroomsList.size()));
         this.classroomsList = classroomsList;
         this.classroomItemClickListener = classroomItemClickListener;

@@ -1,7 +1,6 @@
 package th.ac.kmitl.groupedapplication;
 
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,20 +29,24 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import th.ac.kmitl.groupedapplication.adapter.ClassroomItemClickListener;
-import th.ac.kmitl.groupedapplication.adapter.classroomListAdapter;
+import th.ac.kmitl.groupedapplication.adapter.ClassroomListAdapter;
 import th.ac.kmitl.groupedapplication.model.Classroom;
 
-public class classroomActivity extends AppCompatActivity
+public class ClassroomActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener, ClassroomItemClickListener {
 
-    protected static String uid = null;
-    private TextView textEmail;
-    private TextView textFullName;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
-    public DatabaseReference myRef;
+    private DatabaseReference myRef;
+
+    private TextView textEmail;
+    private TextView textFullName;
     private RecyclerView recyclerView;
+
+    private String uid;
+    private  String ustatus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +72,10 @@ public class classroomActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
 
-
-
-        getAllContacts();
+        getDataResults();
     }
 
-    public  void getAllContacts(){
+    public void getDataResults(){
         final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
@@ -85,12 +85,12 @@ public class classroomActivity extends AppCompatActivity
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String classID = dataSnapshot.getKey();
-                Log.d("getkey",classID);
                 String classSubject = dataSnapshot.child("class_subject").getValue().toString();
-                Classroom  c  = new Classroom(classID,classSubject);
-                classroomArrayList.add(c);
-                getA(classroomArrayList);
-                Log.d("get",c.getClass_subject());
+                Classroom  classroom  = new Classroom(classID,classSubject);
+                classroomArrayList.add(classroom);
+                getAllClassroom(classroomArrayList);
+                Log.d("getkey",classID);
+                Log.d("get",classroom.getClass_subject());
                 Log.d("size",String.valueOf(classroomArrayList.size()));
             }
 
@@ -106,76 +106,29 @@ public class classroomActivity extends AppCompatActivity
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
     }
 
-
-
-    public void getA(ArrayList<Classroom> a) {
-        ArrayList<Classroom> c = a;
-        classroomListAdapter classroomAdapter = new classroomListAdapter(c, classroomActivity.this);
-        Log.d("cList",String.valueOf(c.toArray()));
+    public void getAllClassroom(ArrayList<Classroom> classroomlist) {
+        ArrayList<Classroom> classrooms = classroomlist;
+        ClassroomListAdapter classroomAdapter = new ClassroomListAdapter(classrooms, ClassroomActivity.this);
+        Log.d("cList",String.valueOf(classrooms.toArray()));
         recyclerView.setAdapter(classroomAdapter);
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        //Log.d("sizeList",String.valueOf(classroomArrayList.size()));
-        //classroomListAdapter classroomAdapter = new classroomListAdapter(getAllContacts(), classroomActivity.this);
-        //recyclerView.setAdapter(classroomAdapter);
-//        final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
-//        database = FirebaseDatabase.getInstance();
-//        Intent getI = getIntent();
-//        uid = getI.getStringExtra("uid");
-//        myRef = database.getReference("classroom/"+uid);
-//        myRef.orderByKey().addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    String classID = snapshot.getKey();
-//                    String classSubject = snapshot.child("class_subject").getValue().toString();
-//                    Log.d("classID",classSubject);
-//                    Classroom  c  = new Classroom(classID,classSubject);
-//                    classroomArrayList.add(c);
-//                }
-//                /*Log.d("getKey",);
-//                Log.d("getSubject",);*/
-//                Log.d("classroomArrayList",String.valueOf(classroomArrayList.size()));
-//                getA(classroomArrayList);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-        /*FirebaseRecyclerAdapter<Classroom, ClassroomViewHolder> Adapter = new FirebaseRecyclerAdapter<Classroom, ClassroomViewHolder>(
-                Classroom.class,  //Name of model class
-                R.layout.classroom_item, //Row layout to show data
-                ClassroomViewHolder.class, //Name of viewholder class
-                myRef // Database Refernce
-        ) {
-            @Override
-            protected void populateViewHolder(classroomListAdapter viewHolder, Classroom model, int position) {
-
-            }
-
-            @Override
-            protected void populateViewHolder(ClassroomViewHolder viewHolder, Classroom model, int position) {
-
-                //Your Method to load Data
-
-            }
-        };
-        RecyclerView.setAdapter(Adapter); */
     }
 
     @Override
         public void onClassroomItemClick(String classID){
         Toast.makeText(this, "Class Id: "+ classID, Toast.LENGTH_SHORT).show();
         Intent i = new Intent(this, ClassMenuActivity.class);
+        Intent getI = getIntent();
+        uid = getI.getStringExtra("uid");
         i.putExtra("classID", classID);
+        i.putExtra("uid", uid);
+        i.putExtra("ustatus", ustatus); // is 0 or 1
         startActivity(i);
     }
 
@@ -202,17 +155,16 @@ public class classroomActivity extends AppCompatActivity
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("LogIn","logon");
-                Intent i = getIntent();
-                uid = String.valueOf(i.getStringExtra("uid"));
+                Intent getI = getIntent();
+                uid = getI.getStringExtra("uid");
                 Log.d("LogIn",uid);
                 DataSnapshot usersPathEmail = dataSnapshot.child("users/"+uid+"/email");
                 DataSnapshot usersPathStatus = dataSnapshot.child("users/"+uid+"/status");
-                String status_str = null;
+                String status_str;
 
                 if(usersPathStatus.getValue() != null) {
-                    String status = String.valueOf(usersPathStatus.getValue());
-                    switch (status) {
+                    ustatus = String.valueOf(usersPathStatus.getValue());
+                    switch (ustatus) {
                         case "1": status_str = " (อาจารย์)";
                             DataSnapshot ProfessorPath = dataSnapshot.child("professor/"+uid);
                             Log.d("userUsers",String.valueOf(usersPathEmail));
@@ -235,7 +187,6 @@ public class classroomActivity extends AppCompatActivity
                             break;
                     }
                 }
-
             }
 
             @Override
@@ -265,15 +216,14 @@ public class classroomActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Intent getI = getIntent();
+        uid = getI.getStringExtra("uid");
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            Intent getI = getIntent();
-            uid = getI.getStringExtra("uid");
-
-            Intent intent = new Intent(classroomActivity.this, profileActivity.class);
-            intent.putExtra("uid", uid);
-            startActivity(intent);
+            Intent i = new Intent(ClassroomActivity.this, ProfileActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
             finish();
         } else if (id == R.id.nav_classroom) {
 
@@ -285,9 +235,9 @@ public class classroomActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
-            Toast.makeText(classroomActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(classroomActivity.this, LoginActivity.class);
-            startActivity(intent);
+            Toast.makeText(ClassroomActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(ClassroomActivity.this, LoginActivity.class);
+            startActivity(i);
             finish();
         }
 

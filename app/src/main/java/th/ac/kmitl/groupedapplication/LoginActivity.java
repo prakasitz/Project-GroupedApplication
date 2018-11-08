@@ -90,9 +90,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d("user_provider",String.valueOf(user.getProviderData())+":d-1");
                     Log.d("user",String.valueOf(user.getUid()));
-                    Intent intent = new Intent(LoginActivity.this, classroomActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, ClassroomActivity.class);
                     intent.putExtra("uid",user.getUid());
                     startActivity(intent);
                     finish();
@@ -127,7 +126,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this,Signup_activity.class);
+                Intent i = new Intent(LoginActivity.this,SignupActivity.class);
                 startActivity(i);
                 //attemptSignUp();
             }

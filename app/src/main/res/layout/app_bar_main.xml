@@ -23,12 +23,17 @@
         <include
             android:id="@+id/inc_class"
             layout="@layout/content_classroom"
-            android:visibility="visible"
+            android:visibility="gone"
             />
         <include
-        android:id="@+id/inc_profile"
-        layout="@layout/content_profile"
-        android:visibility="gone"
+            android:id="@+id/inc_profile"
+            layout="@layout/content_profile"
+            android:visibility="gone"
+        />
+        <include
+            android:id="@+id/inc_classroom_menu"
+            layout="@layout/content_classroom_menu"
+            android:visibility="visible"
         />
 
 

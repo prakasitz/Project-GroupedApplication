@@ -3,9 +3,7 @@ package th.ac.kmitl.groupedapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class profileActivity extends AppCompatActivity
+public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     public DatabaseReference myRef;
     private TextView userID;
@@ -41,30 +39,26 @@ public class profileActivity extends AppCompatActivity
     private TextView textEmail;
     private TextView textFullName;
     private Button btnSubmit;
-    private Button btnCancel;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private String status_str;
+    private Intent i = getIntent();
 
-
-    private  String uid;
+    private  String uid = String.valueOf(i.getStringExtra("uid"));;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         findViewById(R.id.inc_class).setVisibility(View.GONE);
         findViewById(R.id.inc_profile).setVisibility(View.VISIBLE);
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-        userID = findViewById(R.id.user_head_temp);
         userName = findViewById(R.id.edit_name);
         userLname = findViewById(R.id.edit_lastname);
         userStatus = findViewById(R.id.edit_status);
         btnSubmit = findViewById(R.id.Submitbutton);
-        btnCancel = findViewById(R.id.Cancelbutton);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,9 +68,12 @@ public class profileActivity extends AppCompatActivity
                 AccountUpdate.put("std_lname", String.valueOf(userLname.getText()));
                 AccountUpdate.put("std_post", String.valueOf(userStatus.getText()));
                 myRef.child("student/"+uid).updateChildren(AccountUpdate);
-                Toast.makeText(profileActivity.this, "บันทึกข้อมูลเรียบร้อย:"+uid+" "+userName+" "+userLname+" "+userStatus, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "บันทึกข้อมูลเรียบร้อย:"+uid+" "+userName+" "+userLname+" "+userStatus, Toast.LENGTH_SHORT).show();
             }
         });
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -239,7 +236,7 @@ public class profileActivity extends AppCompatActivity
         } else if (id == R.id.nav_classroom) {
             Intent getI = getIntent();
             uid = getI.getStringExtra("uid");
-            Intent intent = new Intent(profileActivity.this, classroomActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, ClassroomActivity.class);
             intent.putExtra("uid", uid);
             startActivity(intent);
             finish();
@@ -251,8 +248,8 @@ public class profileActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
-            Toast.makeText(profileActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(profileActivity.this, LoginActivity.class);
+            Toast.makeText(ProfileActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }

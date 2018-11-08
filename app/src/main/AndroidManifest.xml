@@ -16,6 +16,16 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
+
+        </activity>
+        <activity
+            android:name=".ClassroomActivity"
+            android:label="@string/title_activity_classroom"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ClassMenuActivity"
+            android:label="@string/title_activity_class_menu"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,20 +33,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".classroomActivity"
-            android:label="@string/title_activity_classroom"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".profileActivity"
+            android:name=".ProfileActivity"
             android:label="โปรไฟล์"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Signup_activity"
+            android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
-        <activity
-            android:name=".ClassMenuActivity"
-            android:label="@string/title_activity_class_menu"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
