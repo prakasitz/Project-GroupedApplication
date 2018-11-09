@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import th.ac.kmitl.groupedapplication.adapter.ClassroomItemClickListener;
 import th.ac.kmitl.groupedapplication.adapter.ClassroomListAdapter;
 import th.ac.kmitl.groupedapplication.model.Classroom;
+import th.ac.kmitl.groupedapplication.controller.setNavHeader;
 
 public class ClassroomActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener, ClassroomItemClickListener {
@@ -39,6 +41,7 @@ public class ClassroomActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private ChildEventListener childEventListener;
 
     private TextView textEmail;
     private TextView textFullName;
@@ -55,9 +58,12 @@ public class ClassroomActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        //------------setVisibility---------------
+        findViewById(R.id.inc_class).setVisibility(View.VISIBLE);
+        //----------------decrea recyclerview------------------------
+        recyclerView = findViewById(R.id.recyclerViewClassroom);
         recyclerView.setHasFixedSize(true);
-
+        //----------------set layout-----------------------
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -67,25 +73,30 @@ public class ClassroomActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //-------------create nav------------
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
-
+        //-------------class data set to recycleview------------
         getDataResults();
     }
 
     public void getDataResults(){
         final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
+        //------------get uid-----------------
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
+        //------------Firebase-----------------
+        mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("classroom/"+uid);
-        myRef.orderByKey().addChildEventListener(new ChildEventListener() {
+        myRef = database.getReference("classrooms");
+        childEventListener =
+                myRef.orderByChild("p_uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("getData",dataSnapshot.toString());
                 String classID = dataSnapshot.getKey();
-                String classSubject = dataSnapshot.child("class_subject").getValue().toString();
+                String classSubject = dataSnapshot.child("subj_name").getValue().toString();
                 Classroom  classroom  = new Classroom(classID,classSubject);
                 classroomArrayList.add(classroom);
                 getAllClassroom(classroomArrayList);
@@ -116,17 +127,23 @@ public class ClassroomActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart(){
-        super.onStart();
+    protected void onStop() {
+        super.onStop();
+        if (childEventListener != null) {
+            myRef.removeEventListener(childEventListener);
+        }
     }
 
+
     @Override
-        public void onClassroomItemClick(String classID){
+    public void onClassroomItemClick(String classID,String className){
         Toast.makeText(this, "Class Id: "+ classID, Toast.LENGTH_SHORT).show();
+        //-------------intent ไป ClassMenuActivity----------
         Intent i = new Intent(this, ClassMenuActivity.class);
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
-        i.putExtra("classID", classID);
+        i.putExtra("classid", classID);
+        i.putExtra("classname", className);
         i.putExtra("uid", uid);
         i.putExtra("ustatus", ustatus); // is 0 or 1
         startActivity(i);
@@ -145,66 +162,19 @@ public class ClassroomActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        mAuth = FirebaseAuth.getInstance();
+        //---------nav head-----------------
         textEmail = findViewById(R.id.textEmail);
         textFullName = findViewById(R.id.textFullName);
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Intent getI = getIntent();
-                uid = getI.getStringExtra("uid");
-                Log.d("LogIn",uid);
-                DataSnapshot usersPathEmail = dataSnapshot.child("users/"+uid+"/email");
-                DataSnapshot usersPathStatus = dataSnapshot.child("users/"+uid+"/status");
-                String status_str;
-
-                if(usersPathStatus.getValue() != null) {
-                    ustatus = String.valueOf(usersPathStatus.getValue());
-                    switch (ustatus) {
-                        case "1": status_str = " (อาจารย์)";
-                            DataSnapshot ProfessorPath = dataSnapshot.child("professor/"+uid);
-                            Log.d("userUsers",String.valueOf(usersPathEmail));
-                            Log.d("userProf",String.valueOf(ProfessorPath));
-                            textEmail.setText(String.valueOf(usersPathEmail.getValue()));
-                            textFullName.setText(String.valueOf(
-                                    ProfessorPath.child("prof_name").getValue() + " " +
-                                            ProfessorPath.child("prof_lname").getValue() + status_str ));
-                            break;
-                        case "0": status_str = " (นักเรียน)";
-                            DataSnapshot studentsPath = dataSnapshot.child("student/"+uid);
-                            Log.d("userUsers",String.valueOf(usersPathEmail));
-                            Log.d("userDStudents",String.valueOf(studentsPath));
-                            textEmail.setText(String.valueOf(usersPathEmail.getValue()));
-                            textFullName.setText(String.valueOf(
-                                    studentsPath.child("std_name").getValue() + " " +
-                                            studentsPath.child("std_lname").getValue() + status_str ));
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("errorConnect",String.valueOf(databaseError));
-            }
-        });
+        new setNavHeader(uid,textEmail,textFullName);
         return true;
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             return true;
         }
@@ -215,15 +185,16 @@ public class ClassroomActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
+
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ClassroomActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
+            findViewById(R.id.inc_class).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
 
@@ -235,9 +206,10 @@ public class ClassroomActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
-            Toast.makeText(ClassroomActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(ClassroomActivity.this, LoginActivity.class);
             startActivity(i);
+            Toast.makeText(ClassroomActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.inc_class).setVisibility(View.GONE);
             finish();
         }
 
