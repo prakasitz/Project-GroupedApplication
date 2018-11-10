@@ -27,6 +27,11 @@
             android:label="@string/title_activity_classroom"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ClassroomCreateActivity"
+            android:label="@string/title_activity_classroom_create"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".ClassMenuActivity"
             android:label="@string/title_activity_classroom_menu"
             android:theme="@style/AppTheme.NoActionBar">
@@ -40,7 +45,7 @@
             android:label="@string/title_activity_signup" />
         <activity
             android:name=".ViewProjectActivity"
-            android:label="@string/title_activity_view_work"
+            android:label="@string/title_activity_project"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 

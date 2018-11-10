@@ -50,12 +50,12 @@
         android:id="@+id/user_head_temp"
         android:layout_width="128dp"
         android:layout_height="33dp"
-        android:text="รหัสนักศึกษา"
+        android:text=""
         android:textAlignment="textStart"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/user_head_title"
         app:layout_constraintTop_toTopOf="@+id/user_head_title"
-        tools:text="รหัสนักศึกษา" />
+        tools:text="" />
 
     <TextView
         android:id="@+id/user_head_title"
@@ -79,7 +79,7 @@
         android:ems="10"
         android:hint="นามสกุลของคุณ"
         android:inputType="textPersonName"
-        android:text="สร้อยทอง"
+        android:text=""
         app:layout_constraintEnd_toEndOf="@+id/edit_name"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/edit_name"
@@ -94,7 +94,7 @@
         android:ems="10"
         android:hint="คุณกำลังคิดอะไรอยู่?"
         android:inputType="textPersonName"
-        android:text="วิชานี้ยากจังเลยครับ..."
+        android:text="..."
         app:layout_constraintEnd_toEndOf="@+id/edit_lastname"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/edit_lastname"
@@ -110,7 +110,7 @@
         android:ems="10"
         android:hint="ชื่อของคุณ"
         android:inputType="textPersonName"
-        android:text="สมชาย"
+        android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"

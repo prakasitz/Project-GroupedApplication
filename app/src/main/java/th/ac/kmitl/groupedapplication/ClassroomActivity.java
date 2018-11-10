@@ -54,10 +54,10 @@ public class ClassroomActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classroom);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        //--------------mthu---------------------
+        mAuth = FirebaseAuth.getInstance();
         //------------setVisibility---------------
         findViewById(R.id.inc_class).setVisibility(View.VISIBLE);
         //----------------decrea recyclerview------------------------
@@ -67,34 +67,38 @@ public class ClassroomActivity extends AppCompatActivity
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
+        //--------------get Intent----------------------
+        Intent getI = getIntent(); //getFrom Login
+        uid = getI.getStringExtra("uid");
+        ustatus = getI.getStringExtra("ustatus");
+        //---------------drawer menu bar---------------------
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        //-------------create nav------------
+        //-------------create nav--------------------------------
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
+        Log.e("ustatusClassroom",ustatus);
+        if(ustatus.equals("0")) {
+            Menu menubar = navigationView.getMenu();
+            menubar.findItem(R.id.nav_classcreate).setVisible(false);
+        }
         //-------------class data set to recycleview------------
         Log.e("test","test");
-        getDataResults();
+        getDataResults(uid, ustatus);
     }
 
-    public void getDataResults(){
+    public void getDataResults(final String uID, final String uSTATUS){
         final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
-        //------------get uid-----------------
-        Intent getI = getIntent(); //getFrom Login
-        uid = getI.getStringExtra("uid");
-        ustatus = getI.getStringExtra("ustatus");
         //------------Firebase-----------------
 
-        mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("classrooms");
 
-        if(ustatus.equals("0")) {
+        if(uSTATUS.equals("0")) {
             QuerybyUID = myRef;
         } else {
             QuerybyUID = myRef.orderByChild("p_uid").equalTo(uid);
@@ -103,11 +107,11 @@ public class ClassroomActivity extends AppCompatActivity
         QuerybyUID.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String classID = null;
-                String classSubject = null;
-                if(ustatus.equals("0")) {
+                String classID;
+                String classSubject;
+                if(uSTATUS.equals("0")) {
                     for (DataSnapshot findUID: dataSnapshot.child("member_list").getChildren()) {
-                        if(findUID.getValue().equals(uid)) {
+                        if(findUID.getValue().equals(uID)) {
                             Log.w("memberUID",findUID.toString());
                             Log.e("getData_std",dataSnapshot.toString());
                             classID = dataSnapshot.getKey();
@@ -119,7 +123,7 @@ public class ClassroomActivity extends AppCompatActivity
                         }
                     }
                 } else {
-                    Log.w("professerUID",uid);
+                    Log.w("professerUID",uID);
                     Log.e("getData_prof",dataSnapshot.toString());
                     classID = dataSnapshot.getKey();
                     classSubject = dataSnapshot.child("subj_name").getValue().toString();
@@ -127,7 +131,6 @@ public class ClassroomActivity extends AppCompatActivity
                     classroomArrayList.add(classroom);
                 }
                 getAllClassroom(classroomArrayList);
-
             }
 
             @Override
@@ -191,7 +194,9 @@ public class ClassroomActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        if(!ustatus.equals("0")) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        }
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);

@@ -105,6 +105,7 @@ public class SignupActivity extends AppCompatActivity {
                     showProgress(false);
                     Intent intent = new Intent(SignupActivity.this, ClassroomActivity.class);
                     intent.putExtra("uid",user.getUid());
+                    intent.putExtra("ustatus",radioValue.toString());
                     startActivity(intent);
                     finish();
                 }

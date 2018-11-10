@@ -45,8 +45,7 @@ public class ClassroomCreateActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.title_activity_classroom_create);
-        setContentView(R.layout.activity_classroom);
+        setContentView(R.layout.activity_classroom_create);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //-------------setView-------------------
@@ -54,21 +53,18 @@ public class ClassroomCreateActivity extends AppCompatActivity
         btnSubmit = findViewById(R.id.btnClassCreate);
         //-------------setCurrentUser------------
         mAuth = FirebaseAuth.getInstance();
+        //------------getIntent------------------
+        Intent getI = getIntent();
+        uid = getI.getStringExtra("uid");
         //------------setVisibility---------------
         findViewById(R.id.inc_class_create).setVisibility(View.VISIBLE);
-        //------------------------------------------
-
-
         //-----------setOnclick----------------------------
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent getI = getIntent();
-                uid = getI.getStringExtra("uid");
-                Toast.makeText(ClassroomCreateActivity.this,"สร้างสำเร็จ!",Toast.LENGTH_SHORT);
+                Toast.makeText(ClassroomCreateActivity.this,"ยังไม่ Insert!",Toast.LENGTH_SHORT).show();
             }
         });
-
         //----------------set layout-----------------------
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,7 +74,7 @@ public class ClassroomCreateActivity extends AppCompatActivity
         //-------------create nav------------
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_classroom);
+        navigationView.setCheckedItem(R.id.nav_classcreate);
 
     }
 
@@ -117,8 +113,7 @@ public class ClassroomCreateActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_createClassroom) {
-            Toast.makeText(ClassroomCreateActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT);
-            return true;
+            Toast.makeText(ClassroomCreateActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -147,7 +142,7 @@ public class ClassroomCreateActivity extends AppCompatActivity
             finish();
             //แค่ GONE หายไป
         } else if (id == R.id.nav_classcreate) {
-            Toast.makeText(ClassroomCreateActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT);
+            Toast.makeText(ClassroomCreateActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

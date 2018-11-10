@@ -48,4 +48,5 @@
     <string name="project_list">project_list</string>
     <string name="hint_class_subject">ชื่อห้องเรียน</string>
     <string name="title_activity_profile">โปรไฟล์</string>
+    <string name="nav_header_desc">โปรไฟล์ของคุณ</string>
 </resources>
