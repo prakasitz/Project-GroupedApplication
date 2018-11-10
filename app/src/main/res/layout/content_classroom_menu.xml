@@ -8,17 +8,33 @@
     tools:context=".ClassMenuActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <TextView
+        android:id="@+id/title_subject"
+        android:layout_width="491dp"
+        android:layout_height="57dp"
+        android:background="@color/colorThird"
+        android:gravity="center_vertical"
+        android:paddingLeft="70dp"
+        android:text="ชื่อวิชา"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/btnViewGroupStudent"
         android:layout_width="251dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="36dp"
         android:background="@color/colorPrimary"
+        android:contentDescription="@string/group_list"
         android:text="กลุ่ม"
         android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/btnViewMember"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/btnViewMember"
         app:layout_constraintTop_toBottomOf="@+id/btnViewMember" />
 
@@ -28,53 +44,50 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:background="@color/colorPrimary"
-        android:text="สมาชิก (100)"
+        android:contentDescription="@string/member_list"
+        android:text="สมาชิก"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="@+id/btnViewWork"
-        app:layout_constraintStart_toStartOf="@+id/btnViewWork"
-        app:layout_constraintTop_toBottomOf="@+id/btnViewWork" />
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/btnViewProject"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="@+id/btnViewProject"
+        app:layout_constraintTop_toBottomOf="@+id/btnViewProject" />
 
     <Button
-        android:id="@+id/btnAddWork"
+        android:id="@+id/btnAddProject"
         android:layout_width="251dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="136dp"
         android:background="@color/colorPrimary"
-        android:text="เพิ่มงาน"
+        android:text="เพิ่มโปรเจค"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="491dp"
-        android:layout_height="57dp"
-        android:background="@color/colorThird"
-        android:gravity="center_vertical"
-        android:paddingLeft="70dp"
-        android:text="OOP"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnViewWork"
+        android:id="@+id/btnViewProject"
         android:layout_width="251dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="36dp"
         android:background="@color/colorPrimary"
-        android:text="ดูงาน (1)"
+        android:contentDescription="@string/project_list"
+        android:text="ดูโปรเจค"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="@+id/btnAddWork"
-        app:layout_constraintStart_toStartOf="@+id/btnAddWork"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddWork" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/btnAddProject"
+        app:layout_constraintStart_toStartOf="@+id/btnAddProject"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddProject" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </android.support.constraint.ConstraintLayout>

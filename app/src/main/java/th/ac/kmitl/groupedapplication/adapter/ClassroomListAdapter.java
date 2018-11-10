@@ -62,13 +62,13 @@ public class ClassroomListAdapter extends RecyclerView.Adapter<ClassroomViewHold
         super(v);
         this.classroomItemClickListener = classroomItemClickListener;
         ctx = v.getContext();
-        tvId = (TextView) v.findViewById(R.id.tvId);
-        tvName = (TextView) v.findViewById(R.id.tvName);
+        tvId = (TextView) v.findViewById(R.id.tvIdClassroom);
+        tvName = (TextView) v.findViewById(R.id.tvNameClassroom);
 
         v.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ClassroomViewHolder.this.classroomItemClickListener.onClassroomItemClick(classroom.getClass_id());
+                ClassroomViewHolder.this.classroomItemClickListener.onClassroomItemClick(classroom.getClass_id(), classroom.getClass_subject());
             }
         });
     }

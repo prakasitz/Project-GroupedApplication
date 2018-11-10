@@ -11,10 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,7 +39,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText edPass;
     private Button btnSignUp;
 
-
     private UserSignUpTask mAuthTask;
     private View mProgressView;
     private View mLoginFormView;
@@ -50,11 +52,10 @@ public class SignupActivity extends AppCompatActivity {
     private String mLName;
     private String mEmail;
     private String mPass;
-    private Integer radioValue;
+    private Integer radioValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_activity);
         edID = findViewById(R.id.ids);
@@ -64,29 +65,27 @@ public class SignupActivity extends AppCompatActivity {
         edPass = findViewById(R.id.password);
         btnSignUp = findViewById(R.id.SignupButton);
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mID = edID.getText().toString();
-                mName = edName.getText().toString();
-                mLName = edLastName.getText().toString();
-                mEmail = edEmail.getText().toString();
-                mPass = edPass.getText().toString();
-
-                if(mID == null || mName == null || mLName == null || mEmail == null || mPass == null) {
-                    Toast.makeText(SignupActivity.this, "มีบางอย่างที่ไม่ได้กรอก!", Toast.LENGTH_SHORT).show();
-                } else {
-                    showProgress(true);
-                    mAuthTask = new SignupActivity.UserSignUpTask(mID, mName, mLName,mEmail,mPass,radioValue);
-                    mAuthTask.execute((Void) null);
-                }
-
+                attemptSignUp();
             }
         });
 
+        edPass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                    attemptSignUp();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -96,28 +95,18 @@ public class SignupActivity extends AppCompatActivity {
                     Log.d("user",uid);
                     myRef = database.getReference();
                     Map<String, Object> usersTable = new HashMap<>();
+                    usersTable.put("id", mID);
                     usersTable.put("email", mEmail);
-                    usersTable.put("status", radioValue);
+                    usersTable.put("fname", mName);
+                    usersTable.put("lname", mLName);
+                    usersTable.put("post", "");
+                    usersTable.put("level", radioValue);
                     myRef.child("users/"+uid).updateChildren(usersTable);
-
-                    myRef = database.getReference();
-                    Map<String, Object> StudentTable = new HashMap<>();
-                    StudentTable.put("std_id", mID);
-                    StudentTable.put("std_name", mName);
-                    StudentTable.put("std_lname", mLName);
-                    StudentTable.put("std_post", "");
-                    StudentTable.put("std_status", radioValue);
-                    StudentTable.put("uid", uid);
-
-                    myRef.child("student/"+uid).updateChildren(StudentTable);
-                    Toast.makeText(SignupActivity.this, "ลงทะเบียนสำเร็จ!", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(SignupActivity.this, ClassroomActivity  .class);
+                    showProgress(false);
+                    Intent intent = new Intent(SignupActivity.this, ClassroomActivity.class);
                     intent.putExtra("uid",user.getUid());
                     startActivity(intent);
                     finish();
-                } else {
-                    // User is signed out
                 }
 
             }
@@ -159,21 +148,94 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    private void attemptSignUp() {
+        if (mAuthTask != null) {
+            return;
+        }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
+        // Reset errors.
+        edID.setError(null);
+        edEmail.setError(null);
+        edName.setError(null);
+        edLastName.setError(null);
+        edPass.setError(null);
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
+        // Store values at the time of the login attempt.
+        String id = edID.getText().toString();
+        String name = edName.getText().toString();
+        String lastname = edLastName.getText().toString();
+        String email = edEmail.getText().toString();
+        String password = edPass.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid id
+        if (TextUtils.isEmpty(id)) {
+            edID.setError(getString(R.string.error_field_required));
+            focusView = edID;
+            cancel = true;
+        }
+
+        // Check for a valid id
+        if (TextUtils.isEmpty(name)) {
+            edName.setError(getString(R.string.error_field_required));
+            focusView = edName;
+            cancel = true;
+        }
+
+        // Check for a valid id
+        if (TextUtils.isEmpty(lastname)) {
+            edLastName.setError(getString(R.string.error_field_required));
+            focusView = edLastName;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            edEmail.setError(getString(R.string.error_field_required));
+            focusView = edEmail;
+            cancel = true;
+        }  else if (!isEmailValid(email)) {
+            edEmail.setError(getString(R.string.error_invalid_email));
+            focusView = edEmail;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            edPass.setError(getString(R.string.error_field_required));
+            focusView = edPass;
+            cancel = true;
+        }
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            edPass.setError(getString(R.string.error_invalid_password));
+            focusView = edPass;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            showProgress(true);
+            mAuthTask = new UserSignUpTask(id, name, lastname, email, password, radioValue);
+            mAuthTask.execute((Void) null);
+        }
+    }
+
+    private boolean isEmailValid(String email) {
+        //TODO: Replace this with your own logic
+        return email.contains("@");
+    }
+
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 5;
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -195,30 +257,22 @@ public class SignupActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
     public class UserSignUpTask extends AsyncTask<Void, Void, Boolean> {
-        private final String mID;
-        private final String mName;
-        private final String mLname;
-        private final String mEmail;
-        private final String mPassword;
-        private final int mStatus;
         boolean isSuccessful;
         boolean isComplete;
 
         UserSignUpTask(String id, String name, String lastname, String email, String password,int statusvalue) {
             mID = id;
             mName = name;
-            mLname = lastname;
+            mLName = lastname;
             mEmail = email;
-            mPassword = password;
-            mStatus = statusvalue;
+            mPass = password;
+            radioValue = statusvalue;
         }
 
         @Override
@@ -229,19 +283,19 @@ public class SignupActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-           mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
+           mAuth.createUserWithEmailAndPassword(mEmail, mPass)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>(){
                         @Override
                         public void onComplete(Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(SignupActivity.this, "มีผู้ใช้ email นี้แล้วหรือรหัสผ่านน้อยกว่า 6 ตัว.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignupActivity.this, "มีผู้ใช้อีเมลนี้แล้ว", Toast.LENGTH_SHORT).show();
                             } else {
-                                Log.d("SignUp-Success","successed!!");
+                                isSuccessful = task.isSuccessful();
+                                isComplete = task.isSuccessful();
+                                Toast.makeText(SignupActivity.this, "ลงทะเบียนสำเร็จ!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-
             try {
                 // Simulate network access.
                 Thread.sleep(3000);
@@ -249,26 +303,23 @@ public class SignupActivity extends AppCompatActivity {
                 return false;
             }
 
-
-            return true;
+            return isComplete && isSuccessful;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            if(success) {
-                //mAuthTask = null;
+            mAuthTask = null;
+            if(!success) {
                 showProgress(false);
+            } else {
                 Log.d("testSignUp","success!");
-                Log.d("input",mID+", "+mName+", "+mLname+", "+mEmail+", "+mPassword+", "+mStatus);
-                //finish();
-                //Intent i = new Intent(LoginActivity.this,MainActivity.class);
-                //LoginActivity.this.startActivity(i);
+                Log.d("input",mID+", "+mName+", "+mLName+", "+mEmail+", "+mPass+", "+radioValue);
             }
         }
 
         @Override
         protected void onCancelled() {
-            //mAuthTask = null;
+            mAuthTask = null;
             showProgress(false);
         }
     }

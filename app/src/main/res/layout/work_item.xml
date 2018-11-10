@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -12,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvIdClassroom"
+            android:id="@+id/tvIdWork"
             android:text="ID:"
             android:textSize="18sp"
             android:layout_margin="5dp"
@@ -20,7 +22,7 @@
             />
 
         <TextView
-            android:id="@+id/tvNameClassroom"
+            android:id="@+id/tvNameWork"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
->
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,21 +18,29 @@
 
     </android.support.design.widget.AppBarLayout>
 
-        <include
-            android:id="@+id/inc_class"
-            layout="@layout/content_classroom"
-            android:visibility="gone"
-            />
-        <include
-            android:id="@+id/inc_profile"
-            layout="@layout/content_profile"
-            android:visibility="gone"
-        />
-        <include
-            android:id="@+id/inc_classroom_menu"
-            layout="@layout/content_classroom_menu"
-            android:visibility="visible"
-        />
+    <include
+        android:id="@+id/inc_profile"
+        layout="@layout/content_profile"
+        android:visibility="gone" />
 
+    <include
+        android:id="@+id/inc_class"
+        layout="@layout/content_classroom"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_class_create"
+        layout="@layout/content_classroom_create"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_classroom_menu"
+        layout="@layout/content_classroom_menu"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_view_project"
+        layout="@layout/content_view_project"
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

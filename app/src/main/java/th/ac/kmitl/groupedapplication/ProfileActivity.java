@@ -28,10 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import th.ac.kmitl.groupedapplication.controller.setNavHeader;
+
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-    public DatabaseReference myRef;
+
     private TextView userID;
     private EditText userName;
     private EditText userLname;
@@ -39,41 +41,46 @@ public class ProfileActivity extends AppCompatActivity
     private TextView textEmail;
     private TextView textFullName;
     private Button btnSubmit;
+
+    public DatabaseReference myRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private String status_str;
-    private Intent i = getIntent();
-
-    private  String uid = String.valueOf(i.getStringExtra("uid"));;
+    private String ustatus;
+    private  String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        findViewById(R.id.inc_class).setVisibility(View.GONE);
+        //-----------setVisable----------------------
         findViewById(R.id.inc_profile).setVisibility(View.VISIBLE);
+
+        //-----------View----------------------
+        userID = findViewById(R.id.user_head_temp);
         userName = findViewById(R.id.edit_name);
         userLname = findViewById(R.id.edit_lastname);
         userStatus = findViewById(R.id.edit_status);
         btnSubmit = findViewById(R.id.Submitbutton);
 
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("users");
+        mAuth = FirebaseAuth.getInstance();
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> AccountUpdate = new HashMap<>();
-                AccountUpdate.put("std_name", String.valueOf(userName.getText()));
-                AccountUpdate.put("std_lname", String.valueOf(userLname.getText()));
-                AccountUpdate.put("std_post", String.valueOf(userStatus.getText()));
-                myRef.child("student/"+uid).updateChildren(AccountUpdate);
-                Toast.makeText(ProfileActivity.this, "บันทึกข้อมูลเรียบร้อย:"+uid+" "+userName+" "+userLname+" "+userStatus, Toast.LENGTH_SHORT).show();
+                AccountUpdate.put("fname", String.valueOf(userName.getText()));
+                AccountUpdate.put("lname", String.valueOf(userLname.getText()));
+                AccountUpdate.put("post", String.valueOf(userStatus.getText()));
+                myRef.child(uid).updateChildren(AccountUpdate);
+                Toast.makeText(ProfileActivity.this, "บันทึกข้อมูลเรียบร้อย:" + userName.getText()+" "+
+                                                                                    userLname.getText()+" "+
+                                                                                    userStatus.getText(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -82,48 +89,28 @@ public class ProfileActivity extends AppCompatActivity
                 uid = String.valueOf(i.getStringExtra("uid"));
                 Log.d("LogIn","logon");
                 Log.d("LogIn",uid);
-                DataSnapshot usersStatus = dataSnapshot.child("users/"+uid+"/status");
-                if(String.valueOf(usersStatus) == "0") {
-                    DataSnapshot userData = dataSnapshot.child("student/"+uid);
-                    Log.d("userData",String.valueOf(userData));
+                DataSnapshot usersLevel= dataSnapshot.child(uid+"/level");
+                DataSnapshot userData = dataSnapshot.child(uid);
+                Log.d("userData", String.valueOf(userData));
                     for (DataSnapshot userAcc : userData.getChildren()) { //ค่าออกมาเป๋นแต่ละ key
                         switch (userAcc.getKey()) {
-                            case "std_id":
+                            case "id":
                                 userID.setText(String.valueOf(userAcc.getValue()));
                                 break;
-                            case "std_name":
+                            case "fname":
                                 userName.setText(String.valueOf(userAcc.getValue()));
                                 break;
-                            case "std_lname":
+                            case "lname":
                                 userLname.setText(String.valueOf(userAcc.getValue()));
                                 break;
-                            case "std_post":
+                            case "post":
                                 userStatus.setText(String.valueOf(userAcc.getValue()));
                                 break;
-                            default: System.out.println(userAcc.getKey());
+                            default:
+                                System.out.println(userAcc.getKey());
                         }
                     }
-                } else {
-                    DataSnapshot userData = dataSnapshot.child("professor/"+uid);
-                    Log.d("userData",String.valueOf(userData));
-                    for (DataSnapshot userAcc : userData.getChildren()) { //ค่าออกมาเป๋นแต่ละ key
-                        switch (userAcc.getKey()) {
-                            case "prof_id":
-                                userID.setText(String.valueOf(userAcc.getValue()));
-                                break;
-                            case "prof_name":
-                                userName.setText(String.valueOf(userAcc.getValue()));
-                                break;
-                            case "prof_lname":
-                                userLname.setText(String.valueOf(userAcc.getValue()));
-                                break;
-                            case "prof_post":
-                                userStatus.setText(String.valueOf(userAcc.getValue()));
-                                break;
-                            default: System.out.println(userAcc.getKey());
-                        }
-                    }
-                }
+
             }
 
             @Override
@@ -156,56 +143,11 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-        mAuth = FirebaseAuth.getInstance();
+        //---------nav head-----------------
         textEmail = findViewById(R.id.textEmail);
         textFullName = findViewById(R.id.textFullName);
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("LogIn","logon");
-                Intent i = getIntent();
-                uid = String.valueOf(i.getStringExtra("uid"));
-                Log.d("LogIn",uid);
-                DataSnapshot usersPathEmail = dataSnapshot.child("users/"+uid+"/email");
-                DataSnapshot usersPathStatus = dataSnapshot.child("users/"+uid+"/status");
-
-                if(usersPathStatus.getValue() != null) {
-                    String status = String.valueOf(usersPathStatus.getValue());
-                    switch (status) {
-                        case "1": status_str = " (อาจารย์)";
-                            DataSnapshot ProfessorPath = dataSnapshot.child("professor/"+uid);
-                            Log.d("userUsers",String.valueOf(usersPathEmail));
-                            Log.d("userProf",String.valueOf(ProfessorPath));
-                            textEmail.setText(String.valueOf(usersPathEmail.getValue()));
-                            textFullName.setText(String.valueOf(
-                                    ProfessorPath.child("prof_name").getValue() + " " +
-                                            ProfessorPath.child("prof_lname").getValue() + status_str ));
-                            break;
-                        case "0": status_str = " (นักเรียน)";
-                            DataSnapshot studentsPath = dataSnapshot.child("student/"+uid);
-                            Log.d("userUsers",String.valueOf(usersPathEmail));
-                            Log.d("userDStudents",String.valueOf(studentsPath));
-                            textEmail.setText(String.valueOf(usersPathEmail.getValue()));
-                            textFullName.setText(String.valueOf(
-                                    studentsPath.child("std_name").getValue() + " " +
-                                            studentsPath.child("std_lname").getValue() + status_str ));
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("errorConnect",String.valueOf(databaseError));
-            }
-        });
+        new setNavHeader(uid,textEmail,textFullName);
         return true;
     }
 
@@ -218,7 +160,7 @@ public class ProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_createClassroom) {
             return true;
         }
 
@@ -238,9 +180,11 @@ public class ProfileActivity extends AppCompatActivity
             uid = getI.getStringExtra("uid");
             Intent intent = new Intent(ProfileActivity.this, ClassroomActivity.class);
             intent.putExtra("uid", uid);
+            intent.putExtra("ustatus", setNavHeader.ustatus);
             startActivity(intent);
+            findViewById(R.id.inc_profile).setVisibility(View.GONE);
             finish();
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_classcreate) {
 
         } else if (id == R.id.nav_manage) {
 
@@ -251,6 +195,7 @@ public class ProfileActivity extends AppCompatActivity
             Toast.makeText(ProfileActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
+            findViewById(R.id.inc_profile).setVisibility(View.GONE);
             finish();
         }
 

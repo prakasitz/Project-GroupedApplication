@@ -25,7 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
@@ -42,20 +42,20 @@ public class ClassroomActivity extends AppCompatActivity
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private ChildEventListener childEventListener;
+    private Query QuerybyUID;
 
-    private TextView textEmail;
-    private TextView textFullName;
+    private TextView tvEmail;
+    private TextView tvFullName;
     private RecyclerView recyclerView;
 
     private String uid;
-    private  String ustatus;
-
+    private String ustatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classroom);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //------------setVisibility---------------
@@ -68,7 +68,7 @@ public class ClassroomActivity extends AppCompatActivity
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -78,31 +78,56 @@ public class ClassroomActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
         //-------------class data set to recycleview------------
+        Log.e("test","test");
         getDataResults();
     }
 
     public void getDataResults(){
         final ArrayList<Classroom> classroomArrayList = new ArrayList<Classroom>();
         //------------get uid-----------------
-        Intent getI = getIntent();
+        Intent getI = getIntent(); //getFrom Login
         uid = getI.getStringExtra("uid");
+        ustatus = getI.getStringExtra("ustatus");
         //------------Firebase-----------------
+
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("classrooms");
-        childEventListener =
-                myRef.orderByChild("p_uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+
+        if(ustatus.equals("0")) {
+            QuerybyUID = myRef;
+        } else {
+            QuerybyUID = myRef.orderByChild("p_uid").equalTo(uid);
+        }
+
+        QuerybyUID.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("getData",dataSnapshot.toString());
-                String classID = dataSnapshot.getKey();
-                String classSubject = dataSnapshot.child("subj_name").getValue().toString();
-                Classroom  classroom  = new Classroom(classID,classSubject);
-                classroomArrayList.add(classroom);
+                String classID = null;
+                String classSubject = null;
+                if(ustatus.equals("0")) {
+                    for (DataSnapshot findUID: dataSnapshot.child("member_list").getChildren()) {
+                        if(findUID.getValue().equals(uid)) {
+                            Log.w("memberUID",findUID.toString());
+                            Log.e("getData_std",dataSnapshot.toString());
+                            classID = dataSnapshot.getKey();
+                            classSubject = dataSnapshot.child("subj_name").getValue().toString();
+                            Classroom  classroom  = new Classroom(classID,classSubject);
+                            classroomArrayList.add(classroom);
+                        } else {
+                            Log.e("*not*std_uid","cur_std_id: "+uid+" | not: "+findUID.toString());
+                        }
+                    }
+                } else {
+                    Log.w("professerUID",uid);
+                    Log.e("getData_prof",dataSnapshot.toString());
+                    classID = dataSnapshot.getKey();
+                    classSubject = dataSnapshot.child("subj_name").getValue().toString();
+                    Classroom  classroom  = new Classroom(classID,classSubject);
+                    classroomArrayList.add(classroom);
+                }
                 getAllClassroom(classroomArrayList);
-                Log.d("getkey",classID);
-                Log.d("get",classroom.getClass_subject());
-                Log.d("size",String.valueOf(classroomArrayList.size()));
+
             }
 
             @Override
@@ -115,8 +140,11 @@ public class ClassroomActivity extends AppCompatActivity
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("cancell","ok");
+            }
         });
+
     }
 
     public void getAllClassroom(ArrayList<Classroom> classroomlist) {
@@ -134,10 +162,10 @@ public class ClassroomActivity extends AppCompatActivity
         }
     }
 
-
+    //--------for RecycleView-------------------
     @Override
-    public void onClassroomItemClick(String classID,String className){
-        Toast.makeText(this, "Class Id: "+ classID, Toast.LENGTH_SHORT).show();
+    public void onClassroomItemClick(String classID,String className) {
+
         //-------------intent ไป ClassMenuActivity----------
         Intent i = new Intent(this, ClassMenuActivity.class);
         Intent getI = getIntent();
@@ -147,12 +175,13 @@ public class ClassroomActivity extends AppCompatActivity
         i.putExtra("uid", uid);
         i.putExtra("ustatus", ustatus); // is 0 or 1
         startActivity(i);
+        Toast.makeText(this, "Class Id: "+ classID + " ustatus: "+ ustatus, Toast.LENGTH_SHORT).show();
     }
 
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -164,9 +193,11 @@ public class ClassroomActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         //---------nav head-----------------
-        textEmail = findViewById(R.id.textEmail);
-        textFullName = findViewById(R.id.textFullName);
-        new setNavHeader(uid,textEmail,textFullName);
+        tvEmail = findViewById(R.id.textEmail);
+        tvFullName = findViewById(R.id.textFullName);
+        new setNavHeader(uid,tvEmail,tvFullName);
+
+        Log.e("CreateOpMenu","ok");
         return true;
     }
 
@@ -175,7 +206,12 @@ public class ClassroomActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_createClassroom) {
+            Intent i = new Intent(ClassroomActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_class).setVisibility(View.GONE);
+            finish();
             return true;
         }
 
@@ -198,8 +234,12 @@ public class ClassroomActivity extends AppCompatActivity
             finish();
         } else if (id == R.id.nav_classroom) {
 
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_classcreate) {
+            Intent i = new Intent(ClassroomActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_class).setVisibility(View.GONE);
+            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -213,7 +253,7 @@ public class ClassroomActivity extends AppCompatActivity
             finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
