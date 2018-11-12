@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -21,6 +22,21 @@
     <include
         android:id="@+id/inc_profile"
         layout="@layout/content_profile"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/inc_project_add"
+        layout="@layout/content_project_add"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_project_list"
+        layout="@layout/content_project"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_member_list"
+        layout="@layout/content_member"
         android:visibility="gone" />
 
     <include
@@ -39,8 +55,8 @@
         android:visibility="gone" />
 
     <include
-        android:id="@+id/inc_view_project"
-        layout="@layout/content_view_project"
+        android:id="@+id/inc_project"
+        layout="@layout/content_project"
         android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

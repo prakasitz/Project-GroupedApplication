@@ -23,6 +23,21 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ProjectAddActivity"
+            android:label="@string/title_activity_project_create"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ProjectActivity"
+            android:label="@string/title_activity_project"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".MemberActivity"
+            android:label="@string/title_activity_member"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".ClassroomActivity"
             android:label="@string/title_activity_classroom"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -43,11 +58,6 @@
         <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
-        <activity
-            android:name=".ViewProjectActivity"
-            android:label="@string/title_activity_project"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
 
     </application>
 

@@ -45,7 +45,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    public DatabaseReference myRef;
+    private DatabaseReference myRef;
 
     private String mID;
     private String mName;

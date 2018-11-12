@@ -36,7 +36,7 @@ public class ClassroomListAdapter extends RecyclerView.Adapter<ClassroomViewHold
     public ClassroomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.classroom_item, viewGroup, false);
+                inflate(R.layout.item_classroom, viewGroup, false);
         return new ClassroomViewHolder(itemView, classroomItemClickListener);
     }
 

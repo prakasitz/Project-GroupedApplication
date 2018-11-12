@@ -5,18 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ViewProjectActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context=".MemberActivity"
+    tools:showIn="@layout/">
 
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/title_class_in_member_list"
         android:layout_width="491dp"
         android:layout_height="57dp"
         android:background="@color/colorThird"
         android:gravity="center_vertical"
         android:paddingLeft="70dp"
-        android:text="OOP subject"
+        android:text="ชื่อวิชา"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,12 +24,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_Project"
+        android:id="@+id/recyclerView_Member"
         android:layout_width="match_parent"
-        android:layout_height="548dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/title_class_in_member_list" />
 
 </android.support.constraint.ConstraintLayout>

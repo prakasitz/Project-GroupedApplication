@@ -15,19 +15,19 @@ import th.ac.kmitl.groupedapplication.R;
 import th.ac.kmitl.groupedapplication.model.Project;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
-    private List<Project> worksList;
+    private List<Project> projsList;
     private ProjectItemClickListener projectItemClickListener;
 
-    public ProjectListAdapter(List<Project> worksList, ProjectItemClickListener projectItemClickListener){
-        Log.d("crListAdapter",String.valueOf(worksList.size()));
-        this.worksList = worksList;
+    public ProjectListAdapter(List<Project> projsList, ProjectItemClickListener projectItemClickListener){
+        Log.d("crListAdapter",String.valueOf(projsList.size()));
+        this.projsList = projsList;
         this.projectItemClickListener = projectItemClickListener;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
-        Project project = worksList.get(i);
+        Project project = projsList.get(i);
         projectViewHolder.setProject(project);
         projectViewHolder.tvId.setText("ID: " + project.getProject_id());
         projectViewHolder.tvName.setText(project.getProject_name());
@@ -38,13 +38,13 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
     public ProjectViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.work_item, viewGroup, false);
+                inflate(R.layout.item_proj, viewGroup, false);
         return new ProjectViewHolder(itemView, projectItemClickListener);
     }
 
     @Override
     public int getItemCount(){
-        return worksList.size();
+        return projsList.size();
     }
 }
 class ProjectViewHolder extends RecyclerView.ViewHolder{
@@ -64,8 +64,8 @@ class ProjectViewHolder extends RecyclerView.ViewHolder{
         super(v);
         this.projectItemClickListener = projectItemClickListener;
         ctx = v.getContext();
-        tvId = (TextView) v.findViewById(R.id.tvIdWork);
-        tvName = (TextView) v.findViewById(R.id.tvNameWork);
+        tvId = v.findViewById(R.id.tvIdProject);
+        tvName = v.findViewById(R.id.tvNameProject);
 
         v.setOnClickListener(new View.OnClickListener(){
             @Override

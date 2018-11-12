@@ -94,6 +94,7 @@
         android:ems="10"
         android:hint="คุณกำลังคิดอะไรอยู่?"
         android:inputType="textPersonName"
+        android:maxLength="20"
         android:text="..."
         app:layout_constraintEnd_toEndOf="@+id/edit_lastname"
         app:layout_constraintHorizontal_bias="1.0"

@@ -38,8 +38,8 @@ public class ProfileActivity extends AppCompatActivity
     private EditText userName;
     private EditText userLname;
     private EditText userStatus;
-    private TextView textEmail;
-    private TextView textFullName;
+    private TextView tvEmail;
+    private TextView tvFullName;
     private Button btnSubmit;
 
     public DatabaseReference myRef;
@@ -119,13 +119,13 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_profile);
     }
@@ -133,7 +133,7 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -143,24 +143,27 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+
         //---------nav head-----------------
-        textEmail = findViewById(R.id.textEmail);
-        textFullName = findViewById(R.id.textFullName);
-        new setNavHeader(uid,textEmail,textFullName);
+        tvEmail = findViewById(R.id.textEmail);
+        tvFullName = findViewById(R.id.textFullName);
+        new setNavHeader(uid,tvEmail,tvFullName);
+
+        Log.e("CreateOpMenu","ok");
         return true;
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_createClassroom) {
+            Intent i = new Intent(ProfileActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_profile).setVisibility(View.GONE);
+            finish();
             return true;
         }
 
@@ -185,7 +188,11 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.inc_profile).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classcreate) {
-
+            Intent i = new Intent(ProfileActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_profile).setVisibility(View.GONE);
+            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

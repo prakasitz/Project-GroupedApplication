@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -33,50 +34,53 @@ import th.ac.kmitl.groupedapplication.adapter.ProjectListAdapter;
 import th.ac.kmitl.groupedapplication.controller.setNavHeader;
 import th.ac.kmitl.groupedapplication.model.Project;
 
-public class ViewProjectActivity extends AppCompatActivity
-    implements NavigationView.OnNavigationItemSelectedListener,ProjectItemClickListener {
+public class ProjectActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ProjectItemClickListener {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    private DatabaseReference projRef;
     //-------------View-----------------
-    private TextView textEmail;
-    private TextView textFullName;
+    private TextView tvEmail;
+    private TextView tvFullName;
+    private TextView tvSubject;
     private RecyclerView recyclerView;
     //------------String-----------------
     private String uid;
     private String ustatus;
     private String classid;
+    private String classname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_project);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_project);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ///--------------recycleview--------------------------
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_Project);
+        recyclerView = findViewById(R.id.recyclerView_Project);
         recyclerView.setHasFixedSize(true);
-
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         ////-------------------coding----------------------////
-        Log.i("test","hello");
+        Log.i("test", "hello");
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
         //------------setVisibility---------------
-        findViewById(R.id.recyclerView_Project).setVisibility(View.VISIBLE);
-        findViewById(R.id.inc_classroom_menu).setVisibility(View.GONE);
-        findViewById(R.id.inc_class).setVisibility(View.GONE);
-        findViewById(R.id.inc_profile).setVisibility(View.GONE);
-        //----------------------------------------
+        findViewById(R.id.inc_project_list).setVisibility(View.VISIBLE);
+        //----------------set view--------------------
+        tvSubject = findViewById(R.id.title_class_in_project_list);
+        //----------------intent------------------------
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
         ustatus = getI.getStringExtra("ustatus");
         classid = getI.getStringExtra("classid");
-        //----------------------end--------------------------------
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        classname = getI.getStringExtra("classname");
+        //------------------setText subject--------------------------
+        tvSubject.setText(classname);
+        //----------------------draw nav bar--------------------------------
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -89,51 +93,57 @@ public class ViewProjectActivity extends AppCompatActivity
         getDataResults();
     }
 
-    public void getDataResults(){
+    public void getDataResults() {
         final ArrayList<Project> projectArrayList = new ArrayList<Project>();
-        Intent getI = getIntent();
-        uid = getI.getStringExtra("uid");
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("project_list");
-        myRef.orderByKey().addChildEventListener(new ChildEventListener() {
+        projRef = database.getReference("project_list");
+        projRef.orderByChild("class_uid").equalTo(classid+"_"+uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String ProjectID = dataSnapshot.getKey();
-                Log.d("getkey",ProjectID);
-                String ProjectName = dataSnapshot.child("proj_name").getValue().toString();
-                Project project = new Project(ProjectID,ProjectName);
-                projectArrayList.add(project);
-                getAllProject(projectArrayList);
-
-                Log.d("get", project.getProject_name());
-                Log.d("size",String.valueOf(projectArrayList.size()));
+                try {
+                    String ProjectID = dataSnapshot.getKey();
+                    Log.d("getkey", ProjectID);
+                    String ProjectName = dataSnapshot.child("proj_name").getValue().toString();
+                    Project project = new Project(ProjectID, ProjectName);
+                    projectArrayList.add(project);
+                    getAllProject(projectArrayList);
+                    Log.d("get", project.getProject_name());
+                    Log.d("size", String.valueOf(projectArrayList.size()));
+                } catch (Exception e) {
+                    Toast.makeText(ProjectActivity.this,"ไม่มีข้อมูล! Error!",Toast.LENGTH_SHORT).show();
+                    Log.e("firebaseChildEror",e.toString());
+                }
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
     }
 
     public void getAllProject(ArrayList<Project> Projectlist) {
         ArrayList<Project> projects = Projectlist;
-        Log.d("ProjectAdapters",String.valueOf(Projectlist.size()));
-        ProjectListAdapter ProjectAdapter = new ProjectListAdapter(projects, ViewProjectActivity.this);
-        Log.d("ProjectAdapter",String.valueOf(ProjectAdapter.getItemCount()));
+        Log.d("ProjectAdapters", String.valueOf(Projectlist.size()));
+        ProjectListAdapter ProjectAdapter = new ProjectListAdapter(projects, ProjectActivity.this);
+        Log.d("ProjectAdapter", String.valueOf(ProjectAdapter.getItemCount()));
         recyclerView.setAdapter(ProjectAdapter);
     }
 
     @Override
-    public void onProjectItemClick(String projID){
-        Toast.makeText(this, "ProjectID : "+ projID, Toast.LENGTH_SHORT).show();
+    public void onProjectItemClick(String projID) {
+        Toast.makeText(this, "ProjectID : " + projID, Toast.LENGTH_SHORT).show();
         /*Intent i = new Intent(this, ProjectDetailActivity.class);
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
@@ -156,29 +166,31 @@ public class ViewProjectActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        //-------View-------
-        textEmail = findViewById(R.id.textEmail);
-        textFullName = findViewById(R.id.textFullName);
-        new setNavHeader(uid, textEmail, textFullName);
+        //---------nav head-----------------
+        tvEmail = findViewById(R.id.textEmail);
+        tvFullName = findViewById(R.id.textFullName);
+        new setNavHeader(uid,tvEmail,tvFullName);
+
+        Log.e("CreateOpMenu","ok");
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_createClassroom) {
+            Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -190,27 +202,39 @@ public class ViewProjectActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            Intent i = new Intent(ViewProjectActivity.this, ProfileActivity.class);
+            Intent i = new Intent(ProjectActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
+            findViewById(R.id.inc_project).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-
+            uid = getI.getStringExtra("uid");
+            Intent intent = new Intent(ProjectActivity.this, ClassroomActivity.class);
+            intent.putExtra("uid", uid);
+            intent.putExtra("ustatus", setNavHeader.ustatus);
+            startActivity(intent);
+            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            finish();
         } else if (id == R.id.nav_classcreate) {
-
+            Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_logout) { //---logout
             mAuth.signOut();
-            Toast.makeText(ViewProjectActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ViewProjectActivity.this, LoginActivity.class);
+            Toast.makeText(ProjectActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ProjectActivity.this, LoginActivity.class);
             startActivity(intent);
+            findViewById(R.id.inc_project).setVisibility(View.GONE);
             finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

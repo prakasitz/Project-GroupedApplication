@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,10 +52,11 @@ public class ClassMenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_classroom_menu);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //--------------mthu---------------------
+        mAuth = FirebaseAuth.getInstance();
         ////-------------------coding----------------------
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        mAuth = FirebaseAuth.getInstance();
         //------------setVisibility---------------
         findViewById(R.id.inc_classroom_menu).setVisibility(View.VISIBLE);
         //----------------view-----------------------
@@ -63,26 +65,24 @@ public class ClassMenuActivity extends AppCompatActivity
         btnViewProject = findViewById(R.id.btnViewProject);
         btnViewGroup = findViewById(R.id.btnViewGroupStudent);
         btnViewMember = findViewById(R.id.btnViewMember);
-
+        //-------รับค่าจากหน้า classroom เท่านั้น------------
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
         ustatus = getI.getStringExtra("ustatus");
         classid = getI.getStringExtra("classid");
         classname = getI.getStringExtra("classname");
-
-        new setShowCount(btnViewMember, classid, "");
-        new setShowCount(btnViewProject, classid, uid);
-
+        //---------setSubjectname--------------------------
         tvSubject.setText(classname);
-
-        if(ustatus != "" && ustatus.equals("1")) { //เป็นครู
+        if(ustatus != null && ustatus.equals("1")) { //เป็นครู
             btnAddProject.setVisibility(View.VISIBLE);
             btnAddProject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   /*Intent i = new Intent(ClassMenuActivity.this, AddProjectActivity.class);
-                    i.putExtra("uid", uid);
-                    i.putExtra("classid", classid);*/
+                   Intent i = new Intent(ClassMenuActivity.this, ProjectAddActivity.class);
+                   i.putExtra("uid", uid);
+                   i.putExtra("classid", classid);
+                   i.putExtra("classname",classname);
+                   startActivity(i);
                 }
             });
 
@@ -90,19 +90,23 @@ public class ClassMenuActivity extends AppCompatActivity
             btnViewProject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(ClassMenuActivity.this, ViewProjectActivity.class);
+                    Intent i = new Intent(ClassMenuActivity.this, ProjectActivity.class);
                     i.putExtra("uid", uid);
                     i.putExtra("classid", classid);
                     i.putExtra("classname", classname);
+                    startActivity(i);
                 }
             });
 
             btnViewMember.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-             /*   Intent i = new Intent(ClassMenuActivity.this, ViewMemberActivity.class);
+                Intent i = new Intent(ClassMenuActivity.this, MemberActivity.class);
                 i.putExtra("uid", uid);
-                i.putExtra("classid", classid); */
+                i.putExtra("ustatus",ustatus);
+                i.putExtra("classid", classid);
+                i.putExtra("classname", classname);
+                startActivity(i);
                 }
             });
         } else { //เป็นนักเรียน
@@ -116,7 +120,7 @@ public class ClassMenuActivity extends AppCompatActivity
                     i.putExtra("classid", classid); */
                 }
             });
-
+            //----------------set btnViewMemmer ให้อย่ตรงกลางจอ---------------------
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) btnViewMember.getLayoutParams();
             params.setMargins(
                     ((ConstraintLayout.LayoutParams) btnViewMember.getLayoutParams()).leftMargin,
@@ -124,9 +128,7 @@ public class ClassMenuActivity extends AppCompatActivity
                     ((ConstraintLayout.LayoutParams) btnViewMember.getLayoutParams()).rightMargin,
                     ((ConstraintLayout.LayoutParams) btnViewMember.getLayoutParams()).bottomMargin
             );
-
             btnViewMember.setLayoutParams(params);
-
             btnViewMember.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -137,10 +139,9 @@ public class ClassMenuActivity extends AppCompatActivity
                 i.putExtra("classid", classid); */
                 }
             });
-        }
-
-
-
+        } //end if else
+        new setShowCount(btnViewMember, classid, "");
+        new setShowCount(btnViewProject, classid, uid);
         //ยังไม่เสร็จ
 
 
@@ -151,15 +152,20 @@ public class ClassMenuActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
+        Log.e("ustatusClassMenu",ustatus);
+        if(ustatus.equals("0")) {
+            Menu menubar = navigationView.getMenu();
+            menubar.findItem(R.id.nav_classcreate).setVisible(false);
+        }
     }
 
     //-------------template----------------------
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -169,23 +175,27 @@ public class ClassMenuActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        //-------View-------
+        if(!ustatus.equals("0")) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        }
+        //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
-        new setNavHeader(uid, tvEmail, tvFullName);
+        new setNavHeader(uid,tvEmail,tvFullName);
+        Log.e("CreateOpMenu","ok");
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_createClassroom) {
+            Intent i = new Intent(ClassMenuActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_classroom_menu).setVisibility(View.GONE);
+            finish();
             return true;
         }
 
@@ -211,7 +221,11 @@ public class ClassMenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_classroom) {
 
         } else if (id == R.id.nav_classcreate) {
-
+            Intent i = new Intent(ClassMenuActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_classroom_menu).setVisibility(View.GONE);
+            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
