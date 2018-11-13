@@ -41,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity
     private TextView tvEmail;
     private TextView tvFullName;
     private Button btnSubmit;
+    private NavigationView navigationView;
 
     public DatabaseReference myRef;
     private FirebaseAuth mAuth;
@@ -82,6 +83,11 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
+
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_profile);
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -106,6 +112,12 @@ public class ProfileActivity extends AppCompatActivity
                             case "post":
                                 userStatus.setText(String.valueOf(userAcc.getValue()));
                                 break;
+                            case "level":
+                                    ustatus = String.valueOf(userAcc.getValue());
+                                    if(ustatus.equals("0")) {
+                                        Menu menubar = navigationView.getMenu();
+                                        menubar.findItem(R.id.nav_classcreate).setVisible(false);
+                                    }
                             default:
                                 System.out.println(userAcc.getKey());
                         }
@@ -124,10 +136,6 @@ public class ProfileActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_profile);
     }
 
 
@@ -148,7 +156,6 @@ public class ProfileActivity extends AppCompatActivity
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
         new setNavHeader(uid,tvEmail,tvFullName);
-
         Log.e("CreateOpMenu","ok");
         return true;
     }

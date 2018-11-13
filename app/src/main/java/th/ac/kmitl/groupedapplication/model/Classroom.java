@@ -13,6 +13,12 @@ public class Classroom {
         this.class_subject = class_subject;
     }
 
+    public Classroom(String class_id, String class_subject, String prof_id) {
+        this.class_id = class_id;
+        this.class_subject = class_subject;
+        this.prof_id = prof_id;
+    }
+
     public Classroom(String[] worked, String class_day, String class_id, String class_start, String class_subject, String prof_id) {
         this.worked = worked;
         this.class_day = class_day;

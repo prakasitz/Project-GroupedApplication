@@ -68,7 +68,7 @@ public class ClassroomListAdapter extends RecyclerView.Adapter<ClassroomViewHold
         v.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ClassroomViewHolder.this.classroomItemClickListener.onClassroomItemClick(classroom.getClass_id(), classroom.getClass_subject());
+                ClassroomViewHolder.this.classroomItemClickListener.onClassroomItemClick(classroom.getClass_id(), classroom.getClass_subject(), classroom.getProf_id());
             }
         });
     }

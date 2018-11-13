@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -184,7 +183,7 @@ public class ProjectActivity extends AppCompatActivity
             Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
-            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
             return true;
         }
@@ -205,7 +204,7 @@ public class ProjectActivity extends AppCompatActivity
             Intent i = new Intent(ProjectActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
-            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
             uid = getI.getStringExtra("uid");
@@ -213,13 +212,13 @@ public class ProjectActivity extends AppCompatActivity
             intent.putExtra("uid", uid);
             intent.putExtra("ustatus", setNavHeader.ustatus);
             startActivity(intent);
-            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
-            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_manage) {
 
@@ -230,7 +229,7 @@ public class ProjectActivity extends AppCompatActivity
             Toast.makeText(ProjectActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(ProjectActivity.this, LoginActivity.class);
             startActivity(intent);
-            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         }
 

@@ -141,12 +141,12 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
                         num++;
                         if(num==radioValue){
                             num = 0;
-                            GroupInfoUpdate.put((countGroup+plus)+"/proj_id", "3");
+                            GroupInfoUpdate.put((countGroup+plus)+"/proj_id", "");
                             plus++;
                         }
                     }
                     if(num!=0) {
-                        GroupInfoUpdate.put((countGroup + plus) + "/proj_id", "3");
+                        GroupInfoUpdate.put((countGroup + plus) + "/proj_id", "");
                     }
                     myRef.updateChildren(GroupInfoUpdate);
                 }

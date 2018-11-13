@@ -109,25 +109,30 @@ public class ClassroomActivity extends AppCompatActivity
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String classID;
                 String classSubject;
+                String puid;
                 if(uSTATUS.equals("0")) {
+
                     for (DataSnapshot findUID: dataSnapshot.child("member_list").getChildren()) {
                         if(findUID.getValue().equals(uID)) {
                             Log.w("memberUID",findUID.toString());
                             Log.e("getData_std",dataSnapshot.toString());
                             classID = dataSnapshot.getKey();
                             classSubject = dataSnapshot.child("subj_name").getValue().toString();
-                            Classroom  classroom  = new Classroom(classID,classSubject);
+                            puid = dataSnapshot.child("p_uid").getValue().toString();
+                            Classroom  classroom  = new Classroom(classID, classSubject, puid);
                             classroomArrayList.add(classroom);
                         } else {
                             Log.e("*not*std_uid","cur_std_id: "+uid+" | not: "+findUID.toString());
                         }
                     }
+
                 } else {
                     Log.w("professerUID",uID);
                     Log.e("getData_prof",dataSnapshot.toString());
                     classID = dataSnapshot.getKey();
+                    puid = dataSnapshot.child("p_uid").getValue().toString();
                     classSubject = dataSnapshot.child("subj_name").getValue().toString();
-                    Classroom  classroom  = new Classroom(classID,classSubject);
+                    Classroom  classroom  = new Classroom(classID, classSubject, puid);
                     classroomArrayList.add(classroom);
                 }
                 getAllClassroom(classroomArrayList);
@@ -167,7 +172,7 @@ public class ClassroomActivity extends AppCompatActivity
 
     //--------for RecycleView-------------------
     @Override
-    public void onClassroomItemClick(String classID,String className) {
+    public void onClassroomItemClick(String classID,String className,String puID) {
 
         //-------------intent ไป ClassMenuActivity----------
         Intent i = new Intent(this, ClassMenuActivity.class);
@@ -176,9 +181,10 @@ public class ClassroomActivity extends AppCompatActivity
         i.putExtra("classid", classID);
         i.putExtra("classname", className);
         i.putExtra("uid", uid);
+        i.putExtra("puid", puID);
         i.putExtra("ustatus", ustatus); // is 0 or 1
         startActivity(i);
-        Toast.makeText(this, "Class Id: "+ classID + " ustatus: "+ ustatus, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Class Id: "+ classID +" PUID: "+puID+" ustatus: "+ ustatus, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -196,6 +202,13 @@ public class ClassroomActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         if(!ustatus.equals("0")) {
             getMenuInflater().inflate(R.menu.main, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.main, menu);
+            MenuItem cleateClass = menu.findItem(R.id.action_createClassroom);
+            cleateClass.setVisible(false);
+            MenuItem joinClass = menu.findItem(R.id.action_signupClassroom);
+            joinClass.setVisible(true);
+            Log.e("xxxx",ustatus);
         }
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
@@ -211,12 +224,14 @@ public class ClassroomActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_createClassroom) {
-            Intent i = new Intent(ClassroomActivity.this, ClassroomCreateActivity.class);
+        if (id == R.id.action_signupClassroom) {
+            Intent i = new Intent(ClassroomActivity.this, ClassroomJoinActivity.class);
             i.putExtra("uid", uid);
+            i.putExtra("ustatus", ustatus);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-            findViewById(R.id.inc_class).setVisibility(View.GONE);
             finish();
+            findViewById(R.id.inc_class).setVisibility(View.GONE);
             return true;
         }
 
@@ -252,6 +267,7 @@ public class ClassroomActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(ClassroomActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             Toast.makeText(ClassroomActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
             findViewById(R.id.inc_class).setVisibility(View.GONE);

@@ -135,6 +135,7 @@ public class ProjectAddActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
+
     }
 
     @Override
@@ -203,7 +204,7 @@ public class ProjectAddActivity extends AppCompatActivity
             Intent i = new Intent(ProjectAddActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
-            findViewById(R.id.inc_project).setVisibility(View.GONE);
+            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_manage) {
         } else if (id == R.id.nav_share) {
@@ -211,6 +212,7 @@ public class ProjectAddActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(ProjectAddActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             Toast.makeText(ProjectAddActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
             findViewById(R.id.inc_project_add).setVisibility(View.GONE);

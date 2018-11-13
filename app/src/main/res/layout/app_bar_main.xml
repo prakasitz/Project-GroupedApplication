@@ -30,11 +30,6 @@
         android:visibility="gone" />
 
     <include
-        android:id="@+id/inc_project_list"
-        layout="@layout/content_project"
-        android:visibility="gone" />
-
-    <include
         android:id="@+id/inc_member_list"
         layout="@layout/content_member"
         android:visibility="gone" />
@@ -42,6 +37,16 @@
     <include
         android:id="@+id/inc_class"
         layout="@layout/content_classroom"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_classroom_show_id"
+        layout="@layout/content_classroom_show_id"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_classroom_join"
+        layout="@layout/content_classroom_join"
         android:visibility="gone" />
 
     <include
@@ -55,8 +60,13 @@
         android:visibility="gone" />
 
     <include
-        android:id="@+id/inc_project"
+        android:id="@+id/inc_project_list"
         layout="@layout/content_project"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_group_list"
+        layout="@layout/content_group"
         android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -10,11 +10,11 @@
             android:title="ข้อมูลส่วนตัว" />
         <item
             android:id="@+id/nav_classroom"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_classroom"
             android:title="ห้องเรียน" />
         <item
             android:id="@+id/nav_classcreate"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_class_create"
             android:title="@string/action_CreateClassroom" />
         <item
             android:id="@+id/nav_manage"

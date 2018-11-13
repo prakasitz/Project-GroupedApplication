@@ -63,7 +63,7 @@ public class InsertforProf {
                     Toast.makeText(contextCur ,"บันทึกข้อมูลสำเร็จ",Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(actCur.getApplicationContext(), acttarget);
 
-                    if(classid.equals("")) {
+                    if(classid == null) { //สำหรบหน้า createClass
                         i.putExtra("uid",uid);
                         i.putExtra("ustatus","1");
                         actCur.finish();

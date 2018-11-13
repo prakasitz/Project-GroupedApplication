@@ -1,10 +1,20 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <item name="ic_menu_camera" type="drawable">@android:drawable/ic_menu_camera</item>
-    <item name="ic_menu_gallery" type="drawable">@android:drawable/ic_menu_gallery</item>
-    <item name="ic_menu_slideshow" type="drawable">@android:drawable/ic_menu_slideshow</item>
     <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
     <item name="ic_menu_share" type="drawable">@android:drawable/ic_menu_share</item>
     <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
     <item name="ic_menu_profile" type="drawable">@drawable/round_account_circle_black_48</item>
+    <item name="ic_menu_classroom" type="drawable">@drawable/ic_student_center_90px</item>
+    <item name="ic_menu_class_create" type="drawable">@drawable/ic_add_list_96px</item>
+    <item name="ic_menu_group" type="drawable">@drawable/ic_user_groups_filled_100px</item>
+    <item name="ic_menu_project_1" type="drawable">@drawable/ic_task1_96px</item>
+    <item name="ic_menu_project_2" type="drawable">@drawable/ic_task_96px</item>
+    <item name="ic_menu_add_new_1" type="drawable">@drawable/ic_add_new_52px</item>
+    <item name="ic_menu_add_new_2" type="drawable">@drawable/ic_add_new_96px</item>
+    <item name="ic_menu_add_new_3" type="drawable">@drawable/ic_plus_math_90px</item>
+    <item name="ic_menu_member" type="drawable">@drawable/ic_member_90px</item>
+    <item name="ic_menu_delete_1" type="drawable">@drawable/ic_close_window_96px</item>
+    <item name="ic_menu_delete_2" type="drawable">@drawable/ic_trash_48px</item>
+    <item name="ic_menu_delete_3" type="drawable">@drawable/ic_clear_symbol_48px</item>
     <item name="ic_menu_exit" type="drawable">@drawable/round_exit_to_app_black_48</item>
 </resources>

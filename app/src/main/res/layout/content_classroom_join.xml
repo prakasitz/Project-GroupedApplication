@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ClassroomJoinActivity"
+    tools:showIn="@layout/app_bar_main">
+
+    <TextView
+        android:id="@+id/tvHint"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/title_hint_class_join"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout_Join"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout_Join" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_Join"
+        android:layout_width="wrap_content"
+        android:layout_height="76dp"
+        android:layout_marginTop="164dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editJoinClassID"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="116dp"
+            android:ems="10"
+            android:hint="@string/hint_class_id"
+            android:maxLength="6"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnSubmitJoinClass"
+        android:layout_width="219dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/submit_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout_Join" />
+
+</android.support.constraint.ConstraintLayout>

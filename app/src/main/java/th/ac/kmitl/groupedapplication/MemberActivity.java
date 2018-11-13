@@ -89,7 +89,7 @@ public class MemberActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_classroom);
         if (ustatus.equals("0")) {
@@ -192,7 +192,7 @@ public class MemberActivity extends AppCompatActivity
     //-------------template----------------------
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -258,6 +258,7 @@ public class MemberActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(MemberActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             Toast.makeText(MemberActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
             findViewById(R.id.inc_member_list).setVisibility(View.GONE);

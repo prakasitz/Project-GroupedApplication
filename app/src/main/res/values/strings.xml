@@ -51,4 +51,9 @@
     <string name="nav_header_desc">โปรไฟล์ของคุณ</string>
     <string name="remove">ลบ</string>
     <string name="hint_project_name">ชื่อโปรเจ็กต์</string>
+    <string name="action_showClassroomID">แสดงรหัสห้องเรียน</string>
+    <string name="title_ativity_class_join">เข้าร่วมห้องเรียน</string>
+    <string name="title_hint_class_join">โปรดขอรหัสห้องเรียนได้จากอาจารย์ของคุณ</string>
+    <string name="hint_class_id">รหัสห้องเรียน</string>
+    <string name="titile_activity_member">กลุ่ม</string>
 </resources>

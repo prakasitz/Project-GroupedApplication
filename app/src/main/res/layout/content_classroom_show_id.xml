@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MemberActivity"
+    tools:context=".ClassroomShowIDActivity"
     tools:showIn="@layout/app_bar_main">
 
-
     <TextView
-        android:id="@+id/title_class_in_member_list"
+        android:id="@+id/title_subject_in_show_id"
         android:layout_width="491dp"
         android:layout_height="57dp"
         android:background="@color/colorThird"
@@ -23,14 +23,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_Member"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <TextView
+        android:id="@+id/title_class_id"
+        android:layout_width="379dp"
+        android:layout_height="144dp"
+        android:background="@color/colorFourd"
+        android:gravity="center_vertical"
+        android:text="รหัสวิชา"
+        android:textAlignment="center"
+        android:textColorLink="@color/colorFourd"
+        android:textSize="60sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_class_in_member_list" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.322" />
 
 </android.support.constraint.ConstraintLayout>
