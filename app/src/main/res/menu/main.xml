@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_plus_math_90px"
         android:orderInCategory="100"
         android:title="เข้าร่วมห้องเขียน"
-        android:visible="true"
+        android:visible="false"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_showClassroomID"

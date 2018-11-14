@@ -12,6 +12,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:label="GroupApp!"
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
@@ -39,7 +40,12 @@
         </activity>
         <activity
             android:name=".GroupActivity"
-            android:label="@string/titile_activity_member"
+            android:label="@string/titile_activity_group"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".GroupDetailActivity"
+            android:label="@string/title_activity_group_detail"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
@@ -72,9 +78,17 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
 
+
+        <activity
+            android:name=".SelectProjectActivity"
+            android:label="เลือกโปรเจ็กต์"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity
             android:name=".RandGroupActivity"
-            android:label="สุ่มคน">
+            android:label="สุ่มคน"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 </application>
 

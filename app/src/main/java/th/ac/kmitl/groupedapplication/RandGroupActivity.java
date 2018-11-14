@@ -1,9 +1,17 @@
 package th.ac.kmitl.groupedapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,27 +34,46 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Collections;
 
-public class RandGroupActivity extends AppCompatActivity implements View.OnClickListener{
+import th.ac.kmitl.groupedapplication.controller.setNavHeader;
+
+public class RandGroupActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private TextView tvQty;
+    private TextView tvSubject;
+    private TextView tvEmail;
+    private TextView tvFullName;
     private Integer radioValue = 2;
     private RadioButton g2,g3,g4,g5,g6;
     private Button btn_setGroup;
+
+
     ArrayList<String> userInClass = new ArrayList<String>();
     ArrayList<String> modQty = new ArrayList<String>();
     Map<String,Object> GroupInfoUpdate = new HashMap<>();
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    public DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private DatabaseReference classRef;
+    private DatabaseReference groupRef;
+    private ValueEventListener valueEventListener_class;
 
     private int countGroup;
     private int countUser;
+    private String uid;
+    private String ustatus;
+    private String classid;
+    private String classname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_randgroup);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //----------mAth--------------------
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        //---------View----------------------
+        tvSubject = findViewById(R.id.title_class_in_rand_group);
         tvQty = findViewById(R.id.tvQty);
         g2 = findViewById(R.id.radio_g2);
         g3 = findViewById(R.id.radio_g3);
@@ -53,25 +81,32 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
         g5 = findViewById(R.id.radio_g5);
         g6 = findViewById(R.id.radio_g6);
         btn_setGroup = findViewById(R.id.btn_setGroup);
-
+        //-------------getIntent-------------
+        Intent getI = getIntent();
+        uid = getI.getStringExtra("uid");
+        ustatus = getI.getStringExtra("ustatus");
+        classid = getI.getStringExtra("classid");
+        classname = getI.getStringExtra("classname");
+        //------------setVisibility---------------
+        findViewById(R.id.inc_rand_group).setVisibility(View.VISIBLE);
+        //------------setText----------------
+        tvSubject.setText(classname);
+        //-----------setOnclick---------------
         g2.setOnClickListener(this);
         g3.setOnClickListener(this);
         g4.setOnClickListener(this);
         g5.setOnClickListener(this);
         g6.setOnClickListener(this);
         btn_setGroup.setOnClickListener(this);
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("classrooms");
-        mAuth = FirebaseAuth.getInstance();
-        myRef.addValueEventListener(new ValueEventListener() {
+        //-----------coding---------------------
+        classRef = database.getReference("classrooms");
+        valueEventListener_class = classRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnapshot userData = dataSnapshot.child("1/"+"member_list");
+                DataSnapshot userData = dataSnapshot.child(classid+"/"+"member_list");
                 Log.wtf("userData", String.valueOf(userData));
                 countUser = Integer.parseInt(String.valueOf(userData.getChildrenCount()));
                 Log.wtf("countData",  String.valueOf(countUser));
-
 
                 for(DataSnapshot userAcc : userData.getChildren()){
                     userInClass.add(String.valueOf(userAcc.getValue()));
@@ -105,6 +140,26 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
                 Log.d("errorConnect", String.valueOf(databaseError));
             }
         });
+
+        //----------------set layout-----------------------
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        //-------------create nav------------
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_classroom);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (valueEventListener_class != null) {
+            classRef.removeEventListener(valueEventListener_class);
+        }
     }
 
     public void onClick(View v) {
@@ -124,9 +179,8 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
             radioValue = 6;
             Toast.makeText(RandGroupActivity.this, "6", Toast.LENGTH_SHORT).show();
         }else if(v.getId() == R.id.btn_setGroup){
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            myRef = database.getReference("group_list");
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            groupRef = database.getReference("group_list");
+            groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     int num = 0;
@@ -141,14 +195,14 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
                         num++;
                         if(num==radioValue){
                             num = 0;
-                            GroupInfoUpdate.put((countGroup+plus)+"/proj_id", "");
+                            GroupInfoUpdate.put((countGroup + plus) + "/class_id", classid);
                             plus++;
                         }
                     }
                     if(num!=0) {
-                        GroupInfoUpdate.put((countGroup + plus) + "/proj_id", "");
+                        GroupInfoUpdate.put((countGroup + plus) + "/class_id", classid);
                     }
-                    myRef.updateChildren(GroupInfoUpdate);
+                    groupRef.updateChildren(GroupInfoUpdate);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -158,4 +212,88 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
 
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        //---------nav head-----------------
+        tvEmail = findViewById(R.id.textEmail);
+        tvFullName = findViewById(R.id.textFullName);
+        new setNavHeader(uid,tvEmail,tvFullName);
+        Log.e("CreateOpMenu","ok");
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_createClassroom) {
+            Intent i = new Intent(RandGroupActivity.this, ClassroomCreateActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_class).setVisibility(View.GONE);
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        Intent getI = getIntent();
+        uid = getI.getStringExtra("uid");
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_profile) {
+            Intent i = new Intent(RandGroupActivity.this, ProfileActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            findViewById(R.id.inc_rand_group).setVisibility(View.GONE);
+            finish();
+        } else if (id == R.id.nav_classroom) {
+            Intent i = new Intent(RandGroupActivity.this, ClassroomActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
+            startActivity(i);
+            findViewById(R.id.inc_rand_group).setVisibility(View.GONE);
+            finish();
+            //แค่ GONE หายไป
+        } else if (id == R.id.nav_classcreate) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_logout) {
+            mAuth.signOut();
+            Intent i = new Intent(RandGroupActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            Toast.makeText(RandGroupActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.inc_rand_group).setVisibility(View.GONE);
+            finish();
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

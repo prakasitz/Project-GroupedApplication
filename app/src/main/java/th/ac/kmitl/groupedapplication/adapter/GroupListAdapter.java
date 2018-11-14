@@ -18,7 +18,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupViewHolder>{
     private GroupItemClickListener groupItemClickListener;
 
     public GroupListAdapter(List<Group> groupsList, GroupItemClickListener groupItemClickListener){
-        Log.d("crListAdapter",String.valueOf(groupsList.size()));
         this.groupsList = groupsList;
         this.groupItemClickListener = groupItemClickListener;
     }
@@ -30,12 +29,15 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupViewHolder>{
         groupViewHolder.setGroup(group);
 
         groupViewHolder.tvGroupNum.setText("กลุ่มที่ : " + group.getGroupNum());
-        groupViewHolder.tvGroupME.setText(group.getGroupME());
-        groupViewHolder.tvGroupCount.setText(group.getGroupCount() +" คน");
-        groupViewHolder.tvHeadProject.setText("หััวข้อ : "+group.getGroupProjName());
 
-        groupViewHolder.groupID = group.getGroupId();
-        groupViewHolder.projId = group.getGroupProjID();
+        if(!group.getGroupME()) {
+            groupViewHolder.tvGroupME.setText("");
+        }
+
+        groupViewHolder.tvHeadProject.setText(group.getGroupProjName());
+
+        groupViewHolder.tvGroupCount.setText(group.getGroupCount() +" คน");
+        groupViewHolder.tvHeadProject.setText(group.getGroupProjName());
     }
 
     @Override
@@ -60,7 +62,6 @@ class GroupViewHolder extends RecyclerView.ViewHolder{
     protected TextView tvGroupCount;
     protected TextView tvHeadProject;
 
-    protected String projId;
     protected String groupID;
 
     private Context ctx;
@@ -82,7 +83,7 @@ class GroupViewHolder extends RecyclerView.ViewHolder{
         v.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                GroupViewHolder.this.groupItemClickListener.onGroupItemClick(group.getGroupId(), group.getGroupProjID(), group.getGroupProjName());
+                GroupViewHolder.this.groupItemClickListener.onGroupItemClick(group.getGroupId(), group.getGroupNum(), group.getGroupProjName(), group.getGroupME());
             }
         });
     }

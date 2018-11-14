@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
@@ -35,11 +36,11 @@ import th.ac.kmitl.groupedapplication.model.Project;
 
 public class ProjectActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ProjectItemClickListener {
-
+    //project use addChildEventListener
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
     private DatabaseReference projRef;
+    private ChildEventListener childEventListener_proj;
     //-------------View-----------------
     private TextView tvEmail;
     private TextView tvFullName;
@@ -57,28 +58,29 @@ public class ProjectActivity extends AppCompatActivity
         setContentView(R.layout.activity_project);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ///--------------recycleview--------------------------
+        //--------------mthu---------------------------------------------------------------
+        mAuth = FirebaseAuth.getInstance();
+        //--------------recycleview--------------------------------------------------------
         recyclerView = findViewById(R.id.recyclerView_Project);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        ////-------------------coding----------------------////
+        //-------------------coding---------------------------------------------------------
         Log.i("test", "hello");
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //------------setVisibility---------------
+        //------------setVisibility---------------------------------------------------------
         findViewById(R.id.inc_project_list).setVisibility(View.VISIBLE);
-        //----------------set view--------------------
+        //----------------set view-----------------------------------------------------------
         tvSubject = findViewById(R.id.title_class_in_project_list);
-        //----------------intent------------------------
+        //----------------intent-------------------------------------------------------------
         Intent getI = getIntent();
         uid = getI.getStringExtra("uid");
         ustatus = getI.getStringExtra("ustatus");
         classid = getI.getStringExtra("classid");
         classname = getI.getStringExtra("classname");
-        //------------------setText subject--------------------------
+        //------------------setText subject--------------------------------------------------
         tvSubject.setText(classname);
-        //----------------------draw nav bar--------------------------------
+        //----------------------draw nav bar--------------------------------------------------
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -96,12 +98,13 @@ public class ProjectActivity extends AppCompatActivity
         final ArrayList<Project> projectArrayList = new ArrayList<Project>();
         database = FirebaseDatabase.getInstance();
         projRef = database.getReference("project_list");
-        projRef.orderByChild("class_uid").equalTo(classid+"_"+uid).addChildEventListener(new ChildEventListener() {
+        Query projQuery = projRef.orderByChild("class_uid").equalTo(classid+"_"+uid);
+        childEventListener_proj = projQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 try {
+                    Log.d("key_proj", dataSnapshot.getKey());
                     String ProjectID = dataSnapshot.getKey();
-                    Log.d("getkey", ProjectID);
                     String ProjectName = dataSnapshot.child("proj_name").getValue().toString();
                     Project project = new Project(ProjectID, ProjectName);
                     projectArrayList.add(project);
@@ -115,20 +118,16 @@ public class ProjectActivity extends AppCompatActivity
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            }
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
@@ -152,10 +151,18 @@ public class ProjectActivity extends AppCompatActivity
         startActivity(i);*/
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (childEventListener_proj != null) {
+            projRef.removeEventListener(childEventListener_proj);
+        }
+    }
+
     //-------------template----------------------
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -182,6 +189,7 @@ public class ProjectActivity extends AppCompatActivity
         if (id == R.id.action_createClassroom) {
             Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
@@ -203,20 +211,23 @@ public class ProjectActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ProjectActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
             uid = getI.getStringExtra("uid");
-            Intent intent = new Intent(ProjectActivity.this, ClassroomActivity.class);
-            intent.putExtra("uid", uid);
-            intent.putExtra("ustatus", setNavHeader.ustatus);
-            startActivity(intent);
+            Intent i = new Intent(ProjectActivity.this, ClassroomActivity.class);
+            i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
             findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();

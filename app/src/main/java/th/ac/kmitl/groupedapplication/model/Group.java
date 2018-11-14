@@ -4,23 +4,29 @@ public class Group {
     private String groupId; // ไอดีจริงๆตาม group list
     private String groupNum; // กลุ่ม 1 2 3 4 5
     private String groupCount; // นับจำนวนคนใน member list
-    private String groupME; //check uid กับ member_list แต่ละตัวว่าตรงกับเราไหม
+    private boolean groupME; //check uid กับ member_list แต่ละตัวว่าตรงกับเราไหม
     private String groupProjID; //รับค่า projID ถ้ามี
     private String groupProjName; //รับค่า projName ถ้ามี
 
-    public Group(String groupId, String groupCount, String groupME) {
+    public Group(String groupId, String groupCount, boolean groupME) {
         this.groupId = groupId;
         this.groupCount = groupCount;
         this.groupME = groupME;
     }
 
-    public Group(String groupId, String groupCount, String groupME,String groupNum, String groupProjName, String groupProjID) {
+    public Group(String groupId, String groupCount, boolean groupME, String groupNum, String groupProjName) {
         this.groupId = groupId;
         this.groupCount = groupCount;
         this.groupME = groupME;
         this.groupNum = groupNum;
-        this.groupProjID = groupProjID;
         this.groupProjName = groupProjName;
+    }
+
+    public Group(String groupId, String groupCount, boolean groupME, String groupNum) {
+        this.groupId = groupId;
+        this.groupCount = groupCount;
+        this.groupME = groupME;
+        this.groupNum = groupNum;
     }
 
     public Group(String groupProjID) {
@@ -51,11 +57,11 @@ public class Group {
         this.groupCount = groupCount;
     }
 
-    public String getGroupME() {
+    public boolean getGroupME() {
         return groupME;
     }
 
-    public void setGroupME(String groupME) {
+    public void setGroupME(boolean groupME) {
         this.groupME = groupME;
     }
 
@@ -68,7 +74,11 @@ public class Group {
     }
 
     public String getGroupProjName() {
-        return groupProjName;
+        if (groupProjName == null) {
+            return "หัวข้อ : (ว่าง)";
+        }
+
+        return "หัวข้อ : " + groupProjName;
     }
 
     public void setGroupProjName(String groupProjName) {

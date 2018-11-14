@@ -69,4 +69,19 @@
         layout="@layout/content_group"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/inc_group_detail"
+        layout="@layout/content_group_detail"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_rand_group"
+        layout="@layout/content_rand_group"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/inc_select_proj"
+        layout="@layout/content_select_proj"
+        android:visibility="gone" />
+
 </android.support.design.widget.CoordinatorLayout>

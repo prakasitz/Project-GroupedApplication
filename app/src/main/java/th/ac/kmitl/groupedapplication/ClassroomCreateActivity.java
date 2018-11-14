@@ -127,7 +127,6 @@ public class ClassroomCreateActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
@@ -139,11 +138,6 @@ public class ClassroomCreateActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_createClassroom) {
-            Toast.makeText(ClassroomCreateActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT).show();
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -158,15 +152,17 @@ public class ClassroomCreateActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ClassroomCreateActivity.this, ProfileActivity.class);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("uid", uid);
             startActivity(i);
             findViewById(R.id.inc_class_create).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-            Intent intent = new Intent(ClassroomCreateActivity.this, ClassroomActivity.class);
-            intent.putExtra("uid", uid);
-            intent.putExtra("ustatus", setNavHeader.ustatus);
-            startActivity(intent);
+            Intent i = new Intent(ClassroomCreateActivity.this, ClassroomActivity.class);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
+            startActivity(i);
             findViewById(R.id.inc_class_create).setVisibility(View.GONE);
             finish();
             //แค่ GONE หายไป

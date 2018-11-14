@@ -129,6 +129,7 @@ public class ClassroomShowIDActivity extends AppCompatActivity implements Naviga
         if (id == R.id.action_createClassroom) {
             Intent i = new Intent(ClassroomShowIDActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_classroom_show_id).setVisibility(View.GONE);
             finish();
@@ -149,6 +150,7 @@ public class ClassroomShowIDActivity extends AppCompatActivity implements Naviga
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ClassroomShowIDActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_classroom_show_id).setVisibility(View.GONE);
             finish();
@@ -157,6 +159,7 @@ public class ClassroomShowIDActivity extends AppCompatActivity implements Naviga
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ClassroomShowIDActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_classroom_show_id).setVisibility(View.GONE);
             finish();

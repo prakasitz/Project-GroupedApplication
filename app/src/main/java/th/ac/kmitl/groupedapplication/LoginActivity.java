@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference userRef = database.getReference("users/"+uid+"/level");
 
-                    userRef.addValueEventListener(new ValueEventListener() {
+                    userRef.addValueEventListener(new ValueEventListener() { // สำหรับส่ง uid และ ustatus ไป จะได้เอาใช้ได้ทุกหน้า
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String ustatus = dataSnapshot.getValue().toString();
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                             i.putExtra("ustatus",ustatus);
 
                             Log.d("userInOnCreate",uid);
-                            Toast.makeText(LoginActivity.this, "กำลังเข้าสู่ระบบ...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "(mAututhListener) เข้าสู่ระบบสำเร็จ!", Toast.LENGTH_SHORT).show();
 
                             startActivity(i);
                             finish();
@@ -279,18 +279,23 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete( Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "อีเมลหรือรหัสผ่านไม่ถูกต้อง!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "อีเมลหรือรหัสผ่านไม่ถูกต้อง! (!task.isSuccessful())", Toast.LENGTH_LONG).show();
+                                showProgress(false);
+                                mEmailView.setError(getString(R.string.error_invalid_email) + "(onPostExecute)");
+                                mPasswordView.setError(getString(R.string.error_incorrect_password) + "(onPostExecute)");
+                                mPasswordView.requestFocus();
                             } else {
-                                isSuccessful = task.isSuccessful();
-                                isComplete = task.isSuccessful();
-                                Toast.makeText(LoginActivity.this, "เข้าสู่ระบบสำเร็จ!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "(mAuth.signIn) เข้าสู่ระบบสำเร็จ!", Toast.LENGTH_SHORT).show();
                             }
+
+                            isSuccessful = task.isSuccessful();
+                            isComplete = task.isSuccessful();
                         }
                     });
 
             try {
                 // Simulate network access.
-                Thread.sleep(3000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
             }
@@ -302,15 +307,6 @@ public class LoginActivity extends AppCompatActivity {
             return isComplete && isSuccessful;
         }
 
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            if (!success) {
-                showProgress(false);
-                mPasswordView.setError(getString(R.string.error_incorrect_password)+"555555");
-                mPasswordView.requestFocus();
-            }
-        }
 
         @Override
         protected void onCancelled() {

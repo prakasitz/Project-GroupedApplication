@@ -20,8 +20,8 @@
     <string name="action_CreateClassroom">สร้างห้องเรียน</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">ไอดีผู้ใช้</string>
-    <string name="prompt_password">รหัสผ่าน</string>
+    <string name="prompt_email">user@example.com</string>
+    <string name="prompt_password">password (มากกว่า 5 ตัวอักษร)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">เข้าสู่ระบบ</string>
     <string name="error_invalid_email">ไอดีผู้ใช้ไม่ถูกต้อง</string>
@@ -55,5 +55,6 @@
     <string name="title_ativity_class_join">เข้าร่วมห้องเรียน</string>
     <string name="title_hint_class_join">โปรดขอรหัสห้องเรียนได้จากอาจารย์ของคุณ</string>
     <string name="hint_class_id">รหัสห้องเรียน</string>
-    <string name="titile_activity_member">กลุ่ม</string>
+    <string name="titile_activity_group">กลุ่ม</string>
+    <string name="title_activity_group_detail">รายละเอียดกลุ่ม</string>
 </resources>

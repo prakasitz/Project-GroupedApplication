@@ -41,6 +41,7 @@ public class ClassMenuActivity extends AppCompatActivity
     private Button btnViewProject;
     private Button btnViewGroup;
     private Button btnViewMember;
+    private Button btnRandGroup;
     private NavigationView navigationView;
     //------------------------------
     private String uid;
@@ -66,6 +67,7 @@ public class ClassMenuActivity extends AppCompatActivity
         tvSubject = findViewById(R.id.title_subject);
         btnAddProject = findViewById(R.id.btnAddProject);
         btnViewProject = findViewById(R.id.btnViewProject);
+        btnRandGroup = findViewById(R.id.btnRandGroup);
         btnViewGroup = findViewById(R.id.btnViewGroupStudent);
         btnViewMember = findViewById(R.id.btnViewMember);
         //-------รับค่าจากหน้า classroom เท่านั้น------------
@@ -114,21 +116,21 @@ public class ClassMenuActivity extends AppCompatActivity
                     startActivity(i);
                 }
             });
-        } else { //เป็นนักเรียน
-            btnViewGroup.setVisibility(View.VISIBLE);
-            btnViewGroup.setOnClickListener(new View.OnClickListener() {
+
+            btnRandGroup.setVisibility(View.VISIBLE);
+            btnRandGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(ClassMenuActivity.this, "คุณเป็นนักเรียน!", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(ClassMenuActivity.this, GroupActivity.class);
-                    i.putExtra("uid", uid); //ส่ง uid นักเรียนไป เพื่อหาว่าตัวเองอยุกลุ่มไหน
-                    i.putExtra("ustatus", ustatus); //ส่งไปเช็ก status เฉยๆ เผื่อได้ใช้ดาต้า
-                    i.putExtra("classid", classid); //ส่งไปเพื่อ เผื่อคิวรี่ค่าอะไรต่อมิอะไร
-                    i.putExtra("classname", classname); //
-                    i.putExtra("puid", puid); //
+                    Intent i = new Intent(ClassMenuActivity.this, RandGroupActivity.class);
+                    i.putExtra("uid", uid);
+                    i.putExtra("ustatus", ustatus);
+                    i.putExtra("classid", classid);
+                    i.putExtra("classname", classname);
                     startActivity(i);
                 }
             });
+
+        } else { //เป็นนักเรียน
             //----------------set btnViewMemmer ให้อย่ตรงกลางจอ---------------------
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) btnViewMember.getLayoutParams();
             params.setMargins(
@@ -152,8 +154,24 @@ public class ClassMenuActivity extends AppCompatActivity
                 }
             });
         } //end if else
+
+        btnViewGroup.setVisibility(View.VISIBLE);
+        btnViewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ClassMenuActivity.this, GroupActivity.class);
+                i.putExtra("uid", uid); //ส่ง uid นักเรียนไป เพื่อหาว่าตัวเองอยุกลุ่มไหน
+                i.putExtra("ustatus", ustatus); //ส่งไปเช็ก status เฉยๆ เผื่อได้ใช้ดาต้า
+                i.putExtra("classid", classid); //ส่งไปเพื่อ เผื่อคิวรี่ค่าอะไรต่อมิอะไร
+                i.putExtra("classname", classname); //
+                i.putExtra("puid", puid); //
+                startActivity(i);
+            }
+        });
+
         new setShowCount(btnViewMember, classid, "");
         new setShowCount(btnViewProject, classid, uid);
+        new setShowCount(btnViewGroup, classid);
         //ยังไม่เสร็จ
 
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ClassMenuActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/">
 
     <TextView
         android:id="@+id/title_subject"
@@ -50,10 +51,10 @@
         android:text="สมาชิก"
         android:textSize="18dp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/btnViewProject"
+        app:layout_constraintEnd_toEndOf="@+id/btnRandGroup"
         app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="@+id/btnViewProject"
-        app:layout_constraintTop_toBottomOf="@+id/btnViewProject" />
+        app:layout_constraintStart_toStartOf="@+id/btnRandGroup"
+        app:layout_constraintTop_toBottomOf="@+id/btnRandGroup" />
 
     <Button
         android:id="@+id/btnAddProject"
@@ -84,10 +85,19 @@
         app:layout_constraintStart_toStartOf="@+id/btnAddProject"
         app:layout_constraintTop_toBottomOf="@+id/btnAddProject" />
 
-    <android.support.constraint.Group
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnRandGroup"
+        android:layout_width="251dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@color/colorPrimary"
+        android:text="สุ่มกลุ่ม"
+        android:textSize="18dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/btnViewProject"
+        app:layout_constraintStart_toStartOf="@+id/btnViewProject"
+        app:layout_constraintTop_toBottomOf="@+id/btnViewProject" />
+
 
 
 </android.support.constraint.ConstraintLayout>
