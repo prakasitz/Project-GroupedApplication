@@ -28,6 +28,7 @@ import java.util.Map;
 
 import th.ac.kmitl.groupedapplication.controller.InsertforProf;
 import th.ac.kmitl.groupedapplication.controller.setNavHeader;
+import th.ac.kmitl.groupedapplication.model.Classroom;
 
 public class ClassroomCreateActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -85,6 +86,13 @@ public class ClassroomCreateActivity extends AppCompatActivity
                                 ClassroomActivity.class,
                                 ClassroomCreateActivity.this
                         );
+                        Toast.makeText(ClassroomCreateActivity.this, "สร้างห้องสำเร็จ!",Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(ClassroomCreateActivity.this, ClassroomActivity.class);
+                        i.putExtra("ustatus","1");
+                        i.putExtra("uid",uid);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        finish();
 
                     } else {
                         edsubjectName.setError("กรุณากรองช่องนี้");
@@ -152,26 +160,22 @@ public class ClassroomCreateActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ClassroomCreateActivity.this, ProfileActivity.class);
-            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_class_create).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
+            //หน้า สร้างคลาส กดตรงนี้แล้วจะ finish ตัวเองไป
             Intent i = new Intent(ClassroomCreateActivity.this, ClassroomActivity.class);
-            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("uid", uid);
             i.putExtra("ustatus", setNavHeader.ustatus);
-            startActivity(i);
-            findViewById(R.id.inc_class_create).setVisibility(View.GONE);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            //startActivity(i);
+            //findViewById(R.id.inc_class_create).setVisibility(View.GONE);
             finish();
-            //แค่ GONE หายไป
         } else if (id == R.id.nav_classcreate) {
             Toast.makeText(ClassroomCreateActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(ClassroomCreateActivity.this, LoginActivity.class);

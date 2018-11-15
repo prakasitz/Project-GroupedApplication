@@ -159,14 +159,10 @@ public class ClassroomShowIDActivity extends AppCompatActivity implements Naviga
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ClassroomShowIDActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-            findViewById(R.id.inc_classroom_show_id).setVisibility(View.GONE);
-            finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+           // findViewById(R.id.inc_classroom_show_id).setVisibility(View.GONE);
+            //finish();
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(ClassroomShowIDActivity.this, LoginActivity.class);

@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setTitle("เข้าสู่ระบบ");
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mAuth = FirebaseAuth.getInstance();

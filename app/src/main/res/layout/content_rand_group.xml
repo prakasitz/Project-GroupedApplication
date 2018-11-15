@@ -9,45 +9,49 @@
     tools:context=".RandGroupActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <TextView
+        android:id="@+id/title_class_in_rand_group"
+        android:layout_width="0dp"
+        android:layout_height="57dp"
+        android:background="@color/colorThird"
+        android:gravity="center_vertical"
+        android:paddingLeft="50dp"
+        android:text="ชื่อวิชา"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/title_class_in_rand_group">
 
-        <TextView
-            android:id="@+id/title_class_in_rand_group"
-            android:layout_width="491dp"
-            android:layout_height="57dp"
-            android:background="@color/colorThird"
-            android:gravity="center_vertical"
-            android:paddingLeft="70dp"
-            android:text="ชื่อวิชา"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvQty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:text="จำนวนคน/กลุ่ม" />
 
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
             android:layout_marginTop="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
 
 
             <RadioGroup
@@ -88,12 +92,13 @@
                     android:text="6" />
 
             </RadioGroup>
+
             <Button
-                android:layout_gravity="center"
                 android:id="@+id/btn_setGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="จัดกลุ่ม"/>
+                android:layout_gravity="center"
+                android:text="จัดกลุ่ม" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

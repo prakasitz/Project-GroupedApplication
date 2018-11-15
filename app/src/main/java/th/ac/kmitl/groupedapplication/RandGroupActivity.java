@@ -35,6 +35,7 @@ import java.util.Random;
 import java.util.Collections;
 
 import th.ac.kmitl.groupedapplication.controller.setNavHeader;
+import th.ac.kmitl.groupedapplication.controller.setShowCount;
 
 public class RandGroupActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private TextView tvQty;
@@ -62,6 +63,8 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
     private String ustatus;
     private String classid;
     private String classname;
+    private boolean chkRandGroup;
+    protected static boolean chkMember = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +108,14 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DataSnapshot userData = dataSnapshot.child(classid+"/"+"member_list");
                 Log.wtf("userData", String.valueOf(userData));
-                countUser = Integer.parseInt(String.valueOf(userData.getChildrenCount()));
+                if(userData.getValue() != null) {
+                    countUser = Integer.parseInt(String.valueOf(userData.getChildrenCount()));
+                } else {
+                    Log.e("NoStudent","ไม่มีนักศึกษา");
+                    Toast.makeText(RandGroupActivity.this,"ไม่มีสมาชิกในห้องเรียนนี้ ลองใหม่อีกครั้ง",Toast.LENGTH_LONG).show();
+                    chkMember = false;
+                    finish();
+                }
                 Log.wtf("countData",  String.valueOf(countUser));
 
                 for(DataSnapshot userAcc : userData.getChildren()){
@@ -190,19 +200,39 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
                     //countUser;
                     //radioValue;
                     Log.wtf("countGroup",  String.valueOf(countGroup));
-                    for(int i = 0; i < userInClass.size() ; i++) {
-                        GroupInfoUpdate.put((countGroup+plus)+"/member_list/"+(num+1), userInClass.get(i));
-                        num++;
-                        if(num==radioValue){
-                            num = 0;
-                            GroupInfoUpdate.put((countGroup + plus) + "/class_id", classid);
-                            plus++;
+                    for(DataSnapshot inGroup : groupList.getChildren()) {
+                        boolean hasClassID = inGroup.hasChild("class_id");
+                        Log.e("hasclass_id",hasClassID+"_");
+                        Log.e("childrenGroup",groupList.toString());
+                        if(hasClassID && inGroup.child("class_id").getValue().toString().equals(classid)) {
+                            chkRandGroup = false;
+                            break;
+                        } else {
+                            chkRandGroup = true;
                         }
                     }
-                    if(num!=0) {
-                        GroupInfoUpdate.put((countGroup + plus) + "/class_id", classid);
+
+                    if(chkRandGroup) {
+                        for (int i = 0; i < userInClass.size(); i++) {
+                            GroupInfoUpdate.put((countGroup + plus) + "/member_list/" + (num + 1), userInClass.get(i));
+                            num++;
+                            if (num == radioValue) {
+                                num = 0;
+                                GroupInfoUpdate.put((countGroup + plus) + "/class_id", classid);
+                                plus++;
+                            }
+                        }
+                        if (num != 0) {
+                            GroupInfoUpdate.put((countGroup + plus) + "/class_id", classid);
+                        }
+                        groupRef.updateChildren(GroupInfoUpdate);
+                        btn_setGroup.setEnabled(false);
+                        finish();
+                    } else {
+                        Toast.makeText(RandGroupActivity.this,"ชั้นเรียนนี้ได้มีการจัดกลุ่มเอาไว้แล้ว...",Toast.LENGTH_SHORT).show();
+                        Log.e("NoWay","OK");
+                        finish();
                     }
-                    groupRef.updateChildren(GroupInfoUpdate);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -225,7 +255,7 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
@@ -238,15 +268,6 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_createClassroom) {
-            Intent i = new Intent(RandGroupActivity.this, ClassroomCreateActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.putExtra("uid", uid);
-            startActivity(i);
-            findViewById(R.id.inc_class).setVisibility(View.GONE);
-            finish();
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -261,26 +282,28 @@ public class RandGroupActivity extends AppCompatActivity implements View.OnClick
 
         if (id == R.id.nav_profile) {
             Intent i = new Intent(RandGroupActivity.this, ProfileActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(i);
             findViewById(R.id.inc_rand_group).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
             Intent i = new Intent(RandGroupActivity.this, ClassroomActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("uid", uid);
             i.putExtra("ustatus", setNavHeader.ustatus);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_rand_group).setVisibility(View.GONE);
             finish();
             //แค่ GONE หายไป
         } else if (id == R.id.nav_classcreate) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+            Intent i = new Intent(RandGroupActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            //  findViewById(R.id.inc_project_list).setVisibility(View.GONE);
+            // finish();
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(RandGroupActivity.this, LoginActivity.class);

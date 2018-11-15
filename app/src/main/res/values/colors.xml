@@ -11,4 +11,5 @@
     <color name="colorTextPrimary">#1e1403</color>
     <color name="colorTextWarring">#ffa100</color>
     <color name="colorTextDanger">#d00700</color>
+    <color name="White">#fafafa</color>
 </resources>

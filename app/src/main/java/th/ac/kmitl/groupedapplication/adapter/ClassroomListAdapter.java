@@ -28,7 +28,7 @@ public class ClassroomListAdapter extends RecyclerView.Adapter<ClassroomViewHold
     public void onBindViewHolder(ClassroomViewHolder classroomViewHolder, int i){
         Classroom classroom = classroomsList.get(i);
         classroomViewHolder.setClassroom(classroom);
-        classroomViewHolder.tvId.setText("ID: " + classroom.getClass_id());
+        //classroomViewHolder.tvId.setText("ID: " + classroom.getClass_id());
         classroomViewHolder.tvName.setText(classroom.getClass_subject());
     }
 

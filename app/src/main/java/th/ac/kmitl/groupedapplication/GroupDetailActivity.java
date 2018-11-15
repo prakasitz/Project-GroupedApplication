@@ -324,19 +324,22 @@ public class GroupDetailActivity extends AppCompatActivity implements Navigation
             findViewById(R.id.inc_group_detail).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-
-        } else if (id == R.id.nav_classcreate) {
-            Intent i = new Intent(GroupDetailActivity.this, ClassroomCreateActivity.class);
+            uid = getI.getStringExtra("uid");
+            Intent i = new Intent(GroupDetailActivity.this, ClassroomActivity.class);
             i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_group_detail).setVisibility(View.GONE);
             finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_classcreate) {
+            Intent i = new Intent(GroupDetailActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            //findViewById(R.id.inc_group_detail).setVisibility(View.GONE);
+            //finish();
+        }  else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(GroupDetailActivity.this, LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

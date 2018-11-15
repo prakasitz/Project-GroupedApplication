@@ -145,42 +145,46 @@ public class GroupActivity extends AppCompatActivity implements NavigationView.O
                         int groupNum = 0;
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Log.e("key_group", dataSnapshot.getKey());
-                            groupID = dataSnapshot.getKey();
-                            groupMe = false;
-                            groupNum++;
-                            projName = null;
-                            groupCount = String.valueOf(dataSnapshot.child("member_list").getChildrenCount());
-                            for (DataSnapshot findME : dataSnapshot.child("member_list").getChildren()) {
-                                if (findME.getValue().toString().equals(uid)) {
-                                    groupMe = true;
-                                    Log.e("groupMe", String.valueOf(groupMe));
-                                    break;
-                                }
-                            }
-
-                            Log.w("datahasProject_id", String.valueOf(dataSnapshot.hasChild("project_id")));
-                            if (dataSnapshot.hasChild("project_id")) {
-                                projKey = dataSnapshot.child("project_id").getValue().toString();
-                                Log.e("projkey", projKey);
-                                for (Map.Entry<String, String> entry : map.entrySet()) {
-                                    Log.e("entryMap", "key: " + entry.getKey() + " value: " + entry.getValue()); //วิธี getKey และ value
-                                    if (projKey.equals(entry.getKey())) {
-                                        projName = entry.getValue();
-                                        Log.e("projMap", "key: " + projKey + " value: " + projName);
+                            try {
+                                Log.e("key_group", dataSnapshot.getKey());
+                                groupID = dataSnapshot.getKey();
+                                groupMe = false;
+                                groupNum++;
+                                projName = null;
+                                groupCount = String.valueOf(dataSnapshot.child("member_list").getChildrenCount());
+                                for (DataSnapshot findME : dataSnapshot.child("member_list").getChildren()) {
+                                    if (findME.getValue().toString().equals(uid)) {
+                                        groupMe = true;
+                                        Log.e("groupMe", String.valueOf(groupMe));
                                         break;
                                     }
                                 }
-                            } else {
-                                Log.w("dataSnap", String.valueOf(dataSnapshot.toString()));
-                            }
-                            Log.e("groupMEEE", "+" + groupMe);
-                            Group groupFull = new Group(groupID, groupCount, groupMe, String.valueOf(groupNum), projName);
-                            groupArrayList.add(groupNum-1, groupFull);
-                            if(groupArrayList.size() != 0) {
-                                getAllGroup(groupArrayList);
-                            } else {
-                                Toast.makeText(GroupActivity.this, "ห้องเรียนยังไม่มีการจัดกลุ่ม กรุณารอครูจัดกลุ่มก่อน",Toast.LENGTH_LONG).show();
+
+                                Log.w("datahasProject_id", String.valueOf(dataSnapshot.hasChild("project_id")));
+                                if (dataSnapshot.hasChild("project_id")) {
+                                    projKey = dataSnapshot.child("project_id").getValue().toString();
+                                    Log.e("projkey", projKey);
+                                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                                        Log.e("entryMap", "key: " + entry.getKey() + " value: " + entry.getValue()); //วิธี getKey และ value
+                                        if (projKey.equals(entry.getKey())) {
+                                            projName = entry.getValue();
+                                            Log.e("projMap", "key: " + projKey + " value: " + projName);
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    Log.w("dataSnap", String.valueOf(dataSnapshot.toString()));
+                                }
+                                Log.e("groupMEEE", "+" + groupMe);
+                                Group groupFull = new Group(groupID, groupCount, groupMe, String.valueOf(groupNum), projName);
+                                groupArrayList.add(groupNum-1, groupFull);
+                                if(groupArrayList.size() != 0) {
+                                    getAllGroup(groupArrayList);
+                                } else {
+                                    Toast.makeText(GroupActivity.this, "ห้องเรียนยังไม่มีการจัดกลุ่ม กรุณารอครูจัดกลุ่มก่อน",Toast.LENGTH_LONG).show();
+                                }
+                            } catch (Exception e) {
+                                Log.e("groupActivity",e.toString());
                             }
                         }
 
@@ -341,19 +345,22 @@ public class GroupActivity extends AppCompatActivity implements NavigationView.O
             findViewById(R.id.inc_group_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-
-        } else if (id == R.id.nav_classcreate) {
-            Intent i = new Intent(GroupActivity.this, ClassroomCreateActivity.class);
+            uid = getI.getStringExtra("uid");
+            Intent i = new Intent(GroupActivity.this, ClassroomActivity.class);
             i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_group_list).setVisibility(View.GONE);
             finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_classcreate) {
+            Intent i = new Intent(GroupActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+           // findViewById(R.id.inc_group_list).setVisibility(View.GONE);
+           // finish();
+        }  else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(GroupActivity.this, LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

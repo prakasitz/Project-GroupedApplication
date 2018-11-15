@@ -151,7 +151,6 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
@@ -164,15 +163,6 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_createClassroom) {
-            Intent i = new Intent(ProfileActivity.this, ClassroomCreateActivity.class);
-            i.putExtra("uid", uid);
-            startActivity(i);
-            findViewById(R.id.inc_profile).setVisibility(View.GONE);
-            finish();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -188,27 +178,25 @@ public class ProfileActivity extends AppCompatActivity
         } else if (id == R.id.nav_classroom) {
             Intent getI = getIntent();
             uid = getI.getStringExtra("uid");
-            Intent intent = new Intent(ProfileActivity.this, ClassroomActivity.class);
-            intent.putExtra("uid", uid);
-            intent.putExtra("ustatus", setNavHeader.ustatus);
-            startActivity(intent);
+            Intent i = new Intent(ProfileActivity.this, ClassroomActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
+            startActivity(i);
             findViewById(R.id.inc_profile).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ProfileActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
-            findViewById(R.id.inc_profile).setVisibility(View.GONE);
-            finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+            //findViewById(R.id.inc_profile).setVisibility(View.GONE);
+            //finish();
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Toast.makeText(ProfileActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-            startActivity(intent);
+            Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
             findViewById(R.id.inc_profile).setVisibility(View.GONE);
             finish();
         }

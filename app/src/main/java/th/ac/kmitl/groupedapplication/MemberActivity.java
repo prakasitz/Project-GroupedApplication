@@ -213,9 +213,6 @@ public class MemberActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!ustatus.equals("0")) {
-            getMenuInflater().inflate(R.menu.main, menu);
-        }
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
@@ -227,17 +224,6 @@ public class MemberActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_createClassroom) {
-            Intent i = new Intent(MemberActivity.this, ClassroomCreateActivity.class);
-            i.putExtra("uid", uid);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-            findViewById(R.id.inc_member_list).setVisibility(View.GONE);
-            finish();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -257,18 +243,21 @@ public class MemberActivity extends AppCompatActivity
             findViewById(R.id.inc_member_list).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-
-        } else if (id == R.id.nav_classcreate) {
-            Intent i = new Intent(MemberActivity.this, ClassroomCreateActivity.class);
+            uid = getI.getStringExtra("uid");
+            Intent i = new Intent(MemberActivity.this, ClassroomActivity.class);
             i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_member_list).setVisibility(View.GONE);
             finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_classcreate) {
+            Intent i = new Intent(MemberActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            //findViewById(R.id.inc_member_list).setVisibility(View.GONE);
+            //finish();
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(MemberActivity.this, LoginActivity.class);

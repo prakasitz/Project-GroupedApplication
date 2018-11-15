@@ -131,6 +131,7 @@ public class ClassMenuActivity extends AppCompatActivity
             });
 
         } else { //เป็นนักเรียน
+            Log.e("stueden","yes");
             //----------------set btnViewMemmer ให้อย่ตรงกลางจอ---------------------
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) btnViewMember.getLayoutParams();
             params.setMargins(
@@ -172,6 +173,7 @@ public class ClassMenuActivity extends AppCompatActivity
         new setShowCount(btnViewMember, classid, "");
         new setShowCount(btnViewProject, classid, uid);
         new setShowCount(btnViewGroup, classid);
+
         //ยังไม่เสร็จ
 
 
@@ -203,6 +205,10 @@ public class ClassMenuActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,21 +266,25 @@ public class ClassMenuActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ClassMenuActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_classroom_menu).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-
-        } else if (id == R.id.nav_classcreate) {
-            Intent i = new Intent(ClassMenuActivity.this, ClassroomCreateActivity.class);
+            Intent i = new Intent(ClassMenuActivity.this, ClassroomActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
             startActivity(i);
             findViewById(R.id.inc_classroom_menu).setVisibility(View.GONE);
             finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_classcreate) {
+            Intent i = new Intent(ClassMenuActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            //findViewById(R.id.inc_classroom_menu).setVisibility(View.GONE);
+            //finish();
         } else if (id == R.id.nav_logout) { //---logout
             mAuth.signOut();
             Toast.makeText(ClassMenuActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();

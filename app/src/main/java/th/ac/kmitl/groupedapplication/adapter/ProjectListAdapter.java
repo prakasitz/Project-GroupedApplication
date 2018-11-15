@@ -29,7 +29,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
         Project project = projsList.get(i);
         projectViewHolder.setProject(project);
-        projectViewHolder.tvId.setText("ID: " + project.getProject_id());
+        projectViewHolder.tvId.setText("หัวข้อ : "/*+ project.getProject_id()*/);
         projectViewHolder.tvName.setText(project.getProject_name());
     }
 

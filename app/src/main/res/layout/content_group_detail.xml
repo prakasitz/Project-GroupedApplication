@@ -10,11 +10,11 @@
 
     <TextView
         android:id="@+id/title_class_in_group_detail"
-        android:layout_width="491dp"
+        android:layout_width="0dp"
         android:layout_height="57dp"
         android:background="@color/colorThird"
         android:gravity="center_vertical"
-        android:paddingLeft="70dp"
+        android:paddingLeft="50dp"
         android:text="ชื่อวิชา"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -24,23 +24,23 @@
 
     <TextView
         android:id="@+id/title_head_project"
-        android:layout_width="414dp"
+        android:layout_width="0dp"
         android:layout_height="57dp"
         android:layout_marginTop="20dp"
         android:gravity="center_vertical"
-        android:paddingLeft="20dp"
+        android:paddingLeft="100px"
         android:text="หัวข้อ : (ว่าง)"
         android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_class_in_group_detail" />
 
     <Button
         android:id="@+id/btn_select_proj"
-        android:layout_width="252dp"
-        android:layout_height="44dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:gravity="center_vertical"
@@ -56,23 +56,24 @@
 
     <TextView
         android:id="@+id/title_member_in_group"
-        android:layout_width="411dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="326dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:text="สมาชิก (5)"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_proj" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_GroupDetail"
-        android:layout_width="match_parent"
-        android:layout_height="326dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

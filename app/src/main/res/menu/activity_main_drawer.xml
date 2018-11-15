@@ -19,7 +19,8 @@
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="สิ่งที่ต้องทำ" />
+            android:title="สิ่งที่ต้องทำ"
+            android:visible="false"/>
     </group>
 
     <item android:title="ออกจากระบบ">
@@ -27,7 +28,8 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Share"
+                android:visible="false"/>
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_exit"

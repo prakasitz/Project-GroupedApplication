@@ -172,10 +172,6 @@ public class ProjectAddActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_createClassroom) {
-            Toast.makeText(ProjectAddActivity.this,"คุณอยู่หน้านี้แล้ว",Toast.LENGTH_SHORT).show();
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -190,25 +186,25 @@ public class ProjectAddActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ProjectAddActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_project_add).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classroom) {
-            Intent intent = new Intent(ProjectAddActivity.this, ClassroomActivity.class);
-            intent.putExtra("uid", uid);
-            intent.putExtra("ustatus", setNavHeader.ustatus);
-            startActivity(intent);
+            Intent i = new Intent(ProjectAddActivity.this, ClassroomActivity.class);
+            i.putExtra("uid", uid);
+            i.putExtra("ustatus", setNavHeader.ustatus);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
             findViewById(R.id.inc_project_add).setVisibility(View.GONE);
             finish();
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ProjectAddActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
+           // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
-            finish();
-        } else if (id == R.id.nav_manage) {
-        } else if (id == R.id.nav_share) {
-
+          //  findViewById(R.id.inc_project_list).setVisibility(View.GONE);
+           // finish();
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(ProjectAddActivity.this, LoginActivity.class);

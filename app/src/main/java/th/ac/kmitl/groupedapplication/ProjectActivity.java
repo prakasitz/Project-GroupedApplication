@@ -172,7 +172,7 @@ public class ProjectActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         //---------nav head-----------------
         tvEmail = findViewById(R.id.textEmail);
         tvFullName = findViewById(R.id.textFullName);
@@ -185,16 +185,6 @@ public class ProjectActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_createClassroom) {
-            Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
-            i.putExtra("uid", uid);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
-            finish();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -227,19 +217,16 @@ public class ProjectActivity extends AppCompatActivity
         } else if (id == R.id.nav_classcreate) {
             Intent i = new Intent(ProjectActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-            findViewById(R.id.inc_project_list).setVisibility(View.GONE);
-            finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+            //findViewById(R.id.inc_project_list).setVisibility(View.GONE);
+            //finish();
         } else if (id == R.id.nav_logout) { //---logout
             mAuth.signOut();
             Toast.makeText(ProjectActivity.this, "ออกจากระบบแล้ว!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ProjectActivity.this, LoginActivity.class);
-            startActivity(intent);
+            Intent i = new Intent(ProjectActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
             findViewById(R.id.inc_project_list).setVisibility(View.GONE);
             finish();
         }

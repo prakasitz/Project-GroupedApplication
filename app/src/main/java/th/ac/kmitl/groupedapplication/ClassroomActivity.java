@@ -41,7 +41,7 @@ public class ClassroomActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private ChildEventListener childEventListener;
+    private ChildEventListener childEventListener_class;
     private Query QuerybyUID;
 
     private TextView tvEmail;
@@ -165,8 +165,8 @@ public class ClassroomActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (childEventListener != null) {
-            myRef.removeEventListener(childEventListener);
+        if (childEventListener_class != null) {
+            myRef.removeEventListener(childEventListener_class);
         }
     }
 
@@ -228,12 +228,22 @@ public class ClassroomActivity extends AppCompatActivity
             Intent i = new Intent(ClassroomActivity.this, ClassroomJoinActivity.class);
             i.putExtra("uid", uid);
             i.putExtra("ustatus", ustatus);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-            finish();
-            findViewById(R.id.inc_class).setVisibility(View.GONE);
+            //finish();
+            //findViewById(R.id.inc_class).setVisibility(View.GONE);
             return true;
         }
+
+        if (id == R.id.action_createClassroom) {
+            Intent i = new Intent(ClassroomActivity.this, ClassroomCreateActivity.class);
+            i.putExtra("uid", uid);
+            startActivity(i);
+            //findViewById(R.id.inc_profile).setVisibility(View.GONE);
+            //finish();
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -249,6 +259,7 @@ public class ClassroomActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             Intent i = new Intent(ClassroomActivity.this, ProfileActivity.class);
             i.putExtra("uid", uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             findViewById(R.id.inc_class).setVisibility(View.GONE);
             finish();
@@ -258,12 +269,8 @@ public class ClassroomActivity extends AppCompatActivity
             Intent i = new Intent(ClassroomActivity.this, ClassroomCreateActivity.class);
             i.putExtra("uid", uid);
             startActivity(i);
-            findViewById(R.id.inc_class).setVisibility(View.GONE);
-            finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+           // findViewById(R.id.inc_class).setVisibility(View.GONE);
+            //finish();
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
             Intent i = new Intent(ClassroomActivity.this, LoginActivity.class);
