@@ -1,5 +1,6 @@
 # Project-GroupedApplication
-โปรเจคนี้เป็นส่วนนึงของวิชา Android Basic เท่านั้น ซึ่งคราวๆ ตัวโปรเจค ใช้ Firebase เป็นฐานข้อมูล เพราะต้องการลองการใช้ Realtime Database ครั้งแรก 
+โปรเจคนี้เป็นส่วนนึงของ **วิชา Android Basic** คณะวิทยาศาสตร์ KMTL เท่านั้น \
+ซึ่งคราวๆ ตัวโปรเจค ใช้ Firebase เป็นฐานข้อมูล เพราะต้องการลองการใช้ Realtime Database ครั้งแรก \
 Tech Stack:
 - Java
 - Android Studtio
